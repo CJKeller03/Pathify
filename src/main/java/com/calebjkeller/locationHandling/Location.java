@@ -56,6 +56,9 @@ public class Location {
                 case "House #":
                     this.houseNumber = table[i];
                     break;
+                case "Street":
+                    this.streetName = table[i];
+                    break;
                 case "Apt #         Lot #":
                     this.aptNumber = table[i];
                     break;
@@ -85,7 +88,22 @@ public class Location {
     }
     
     public String getCompleteAddress(){
-        return this.houseNumber + this.streetName + this.cityName + this.zipCode;
+        String out = "";
+        out += this.houseNumber + " ";
+        out += this.streetName + " ";
+        out += this.cityName + " ";
+        out += this.zipCode;
+        
+        return out;
+    }
+    
+    public String toString() {
+        String out = "";
+        out += this.firstName + " ";
+        out += this.lastName + " : ";
+        out += this.getCompleteAddress();
+        
+        return out;
     }
     
 }

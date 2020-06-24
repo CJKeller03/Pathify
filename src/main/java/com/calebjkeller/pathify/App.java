@@ -5,6 +5,7 @@
  */
 package com.calebjkeller.pathify;
 
+import com.calebjkeller.locationHandling.*;
 import java.util.ArrayList;
 
         
@@ -16,9 +17,12 @@ public class App {
     public static void main(String[] args) {
         
         String pathToCsv = "M25OC Home Delivery List - CSV (Incomplete).csv";
-        ArrayList<String[]> mat;
+        ArrayList<Location> locations;
         try {
-            mat = Tools.importDeliveryList(pathToCsv);
+            locations = Tools.importDeliveryList(pathToCsv);
+            for (Location loc : locations) {
+                System.out.println(loc.toString());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

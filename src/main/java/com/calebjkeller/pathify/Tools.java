@@ -5,6 +5,8 @@
  */
 package com.calebjkeller.pathify;
 
+import com.calebjkeller.locationHandling.*;
+
 import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.io.IOException;
@@ -18,20 +20,25 @@ import java.util.HashMap;
  * @author caleb
  */
 public class Tools {
-    public static ArrayList<String[]> importDeliveryList(String filename) throws IOException {
-
+    
+    public static ArrayList<Location> importDeliveryList(String filename) throws IOException {
+        
         FileReader fReader = new FileReader(filename);
         LineNumberReader lnr = new LineNumberReader(fReader);
         
-        ArrayList<String[]> mat = new ArrayList<String[]>();
-        String[] header = lnr.readLine().split(",");
+        ArrayList<Location> locations = new ArrayList<Location>();
+        String headerAsString = lnr.readLine().replaceAll("[^ ,#:()a-zA-Z0-9]", "");
+        
+        String[] header = headerAsString.split(",");
+        
+        System.out.println(headerAsString);
         
         String line;
         while ((line = lnr.readLine()) != null) {
-            mat.add(line.split(","));
+            locations.add(new Location(line.replaceAll("[^ ,#:()a-zA-Z0-9]", "").split(","), header));
         }
         
-        return mat;
+        return locations;
     }
     
     public static HashMap<String, String> generateDistanceMatrix(ArrayList<String> addresses) {
