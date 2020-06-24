@@ -14,10 +14,11 @@ import java.util.ArrayList;
  */
 public class App {
     public static void main(String[] args) {
+        
         String pathToCsv = "M25OC Home Delivery List - CSV (Incomplete).csv";
         ArrayList<String[]> mat;
         try {
-            mat = Tools.importAddressList(pathToCsv);
+            mat = Tools.importDeliveryList(pathToCsv);
         } catch (Exception e) {
             e.printStackTrace();
         }
