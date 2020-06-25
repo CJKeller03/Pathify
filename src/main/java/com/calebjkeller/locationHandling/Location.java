@@ -87,12 +87,30 @@ public class Location {
         }
     }
     
+    public String getUniqueAddress() {
+        String out = "";
+        out += this.houseNumber + " ";
+        out += this.streetName + " ";
+        
+        if (this.zipCode != null) {
+            out += this.zipCode;
+        }
+        
+        return out;
+    }
+    
     public String getCompleteAddress(){
         String out = "";
         out += this.houseNumber + " ";
         out += this.streetName + " ";
-        out += this.cityName + " ";
-        out += this.zipCode;
+        
+        if (this.cityName != null) {
+            out += this.cityName + " ";
+        }
+        
+        if (this.zipCode != null) {
+            out += this.zipCode;
+        }
         
         return out;
     }
@@ -106,4 +124,7 @@ public class Location {
         return out;
     }
     
+    public boolean hasValidAddress() {
+        return !(this.houseNumber.matches("[^\\w\\d]+")) && !(this.streetName.matches("[^\\w\\d]+"));
+    }
 }
