@@ -26,16 +26,31 @@ import org.json.simple.parser.JSONParser;
 
 /**
  *
- * @author caleb
+ * @author Caleb Keller
  */
 public class Tools {
     
+    /**
+     * Generate an ArrayList of Location objects from the data stored in
+     * a .csv file. The first line of the file is assumed to be the header, which
+     * is used to identify the data stored in each column.
+     * 
+     * @param filename The name (and possibly location) of the .csv file.
+     * @return The ArrayList of Location objects.
+     * @throws IOException 
+     */
     public static ArrayList<Location> importDeliveryList(String filename) throws IOException {
         
+        // Create the line number reader (a simple bufferedreader could be used here).
         FileReader fReader = new FileReader(filename);
         LineNumberReader lnr = new LineNumberReader(fReader);
         
         ArrayList<Location> locations = new ArrayList<Location>();
+        
+        // Remove all characters that shouldn't be present in the file.
+        // This is necessary because for some reason, the first line of the .csv
+        // file contains some garbage at the beginning, which messes up the 
+        // code that interprets the header to put the data in the correct place.
         
         String headerAsString = lnr.readLine().replaceAll("[^ ,#:()a-zA-Z0-9]", "");
         String[] header = headerAsString.split(",");
@@ -48,8 +63,21 @@ public class Tools {
         return locations;
     }
     
+    /**
+     * Generate a HashMap linking origin - destination pairs to the distance
+     * and approximate amount of time between them from a list of Location objects.
+     * The pairs are made by concatenating the origin address and destination
+     * address together into a single string, which is used as the key.
+     * The pairs are asymmetric, which means that the distance/time from A -> B
+     * isn't necessarily the same as the distance/time from B -> A
+     * (because of things like one-way streets).
+     * 
+     * @param locations An ArrayList of location objects
+     * @return A HashMap representing the distance/time between different addresses.
+     */
     public static HashMap<String, Long[]> generateDistanceMatrix(ArrayList<Location> locations) {
         
+        // Read the API key to be used from a file
         String key;
         try {
             key = new BufferedReader(new FileReader("GoogleApiKey.txt")).readLine();
@@ -58,8 +86,10 @@ public class Tools {
             return null;
         }
         
+        // Get the address from every Location. If an address appears more than
+        // once, it is ignored (in the case of apartment buildings or similar).
+        // If a Location's address is invalid, skip it and print a warning to the console.
         ArrayList<String> addresses = new ArrayList<String>();
-        
         for (Location loc : locations) {
             if (loc.hasValidAddress()) {
                 String thisAddress = loc.getCompleteAddress();
@@ -72,57 +102,85 @@ public class Tools {
             }
         }
         
-        System.out.println(key);
+        // Set up the url
         String url = "https://maps.googleapis.com/maps/api/distancematrix/json";
         String charset = java.nio.charset.StandardCharsets.UTF_8.name();
-        String parameters = "origins=%s&destinations=%s&key=%s";
+        String parameterFormat = "origins=%s&destinations=%s&key=%s";
         
-        int uniqueAddresses = addresses.size();
+        HashMap<String, Long[]> addressMatrix = new HashMap<String, Long[]>();
         
-        String queries = String.join("|", addresses);
-        
-        try {
-            parameters = String.format(parameters, 
-                                        URLEncoder.encode(queries, charset),
-                                        URLEncoder.encode(queries, charset),
-                                        URLEncoder.encode(key, charset));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        
-        String response = "";
-        
-        try {
+        for (int i = 0; i < addresses.size(); i++) {
             
-            URLConnection connection = new URL(url + "?" + parameters).openConnection();
-            //URLConnection connection = new URL("https://jsonplaceholder.typicode.com/posts/1").openConnection();
-            connection.setRequestProperty("Accept-Charset", charset);
-            Scanner responseStream = new Scanner(connection.getInputStream());
+            String origin = addresses.get(i);
             
-            while (responseStream.hasNext()) {
-                response += responseStream.nextLine() + "\n";
+            ArrayList<String> destinationList = new ArrayList<String>(addresses);
+            destinationList.remove(i);            
+            
+            for (int j = 0; j < destinationList.size(); j += 25) {
+
+                String destinations = String.join("|", destinationList.subList(j, Math.min(j + 25, destinationList.size())));
+                String parameters;
+
+                try {
+                    parameters = String.format(parameterFormat, 
+                                                URLEncoder.encode(origin, charset),
+                                                URLEncoder.encode(destinations, charset),
+                                                URLEncoder.encode(key, charset));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+
+                String response = "";
+
+                try {
+                    // Open a connection to the API
+                    URLConnection connection = new URL(url + "?" + parameters).openConnection();
+                    //URLConnection connection = new URL("https://jsonplaceholder.typicode.com/posts/1").openConnection();
+                    connection.setRequestProperty("Accept-Charset", charset);
+                    Scanner responseStream = new Scanner(connection.getInputStream());
+
+                    // Read the response into a String
+                    while (responseStream.hasNext()) {
+                        response += responseStream.nextLine() + "\n";
+                    }
+                    responseStream.close();
+                    System.out.println(response);
+
+                    // Write the response to a file to save it in case there is an error
+                    // So that a new request doesn't have to be sent.
+                    String filename = "responses/APIResponse-" +
+                            java.time.LocalDateTime.now().toString().replace(":","-") +
+                            ".txt";
+                    FileWriter file = new FileWriter(filename);
+                    file.write(connection.getURL().toString() + "\n");
+                    file.write(response);
+                    file.flush();
+                    file.close();
+
+                    // Remove the newlines for easier processing
+                    response = response.replace("\n", "");
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+
+                addressMatrix.putAll(getDistanceMatrixFromJSON(response));
+                
             }
-            responseStream.close();
-            System.out.println(response);
-            
-            FileWriter file = new FileWriter("APIResponse.txt");
-            file.write(response);
-            file.flush();
-            file.close();
-            
-            response = response.replace("\n", "");
-            
-            System.out.println(response);
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
         }
+
         
-        return getDistanceMatrixFromJSON(response);
+        return addressMatrix;
     }
     
+    /**
+     * Generate a HashMap linking origin - destination pairs to the distance
+     * and approximate amount of time between them from a JSON file.
+     * @param filename The name (and possibly location) of the JSON file.
+     * @return A HashMap representing the distance/time between different addresses.
+     */
     public static HashMap<String, Long[]> getDistanceMatrixFromFile(String filename) {
         
         Scanner fReader;
@@ -145,10 +203,17 @@ public class Tools {
         return getDistanceMatrixFromJSON(JSONString);
     }
     
+    /**
+     * Generate a HashMap linking origin - destination pairs to the distance
+     * and approximate amount of time between them from a JSON String.
+     * @param JSONString A String representing a JSON object.
+     * @return A HashMap representing the distance/time between different addresses.
+     */
     public static HashMap<String, Long[]> getDistanceMatrixFromJSON(String JSONString) {
         
         JSONObject data;
         
+        // Parse the JSON string.
         try {
             data = (JSONObject) new JSONParser().parse(JSONString);
         } catch (Exception e) {
@@ -162,9 +227,13 @@ public class Tools {
         
         HashMap<String, Long[]> addressMatrix = new HashMap<String, Long[]>();
         
+        // Get the origin and destination addresses encoded in this object.
         JSONArray origins = (JSONArray) data.get("origin_addresses");
         JSONArray destinations = (JSONArray) data.get("destination_addresses");
         
+        // The API response is encoded into a 2D array of JSON objects, where
+        // each row represents an origin address, and each element in the row
+        // is a destination address.
         JSONArray rows = (JSONArray) data.get("rows");
         
         for (int i = 0; i < rows.size(); i++) {
@@ -177,9 +246,13 @@ public class Tools {
                 JSONObject distData = (JSONObject) element.get("distance");
                 JSONObject durData = (JSONObject) element.get("duration");
                 
+                // Get the actual value of the distance and duration.
+                // These are always represented in meters and seconds.
                 Long distance = (Long) distData.get("value");
                 Long duration = (Long) durData.get("value");
                 
+                // Generate the key by concatenating the origin and destination
+                // addresses together, and add the data to the HashMap.
                 Long[] tmp = {distance, duration};
                 addressMatrix.put((String) origins.get(i) + (String) destinations.get(j), tmp);
                 

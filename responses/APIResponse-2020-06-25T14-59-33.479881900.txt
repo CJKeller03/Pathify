@@ -1,0 +1,313 @@
+https://maps.googleapis.com/maps/api/distancematrix/json?origins=437+W+4th+Street+44903&destinations=2444+Lexington+Ave+%2842+Motel%29+44904%7C290+1st+Ave+44902%7C328+6th+Avenue+44905%7C223+7th+Ave+44905%7C371+Apple+Lane+44905%7C373+Apple+Lane+44905%7C1066+Averill+Ave+44906%7C38+Brentwood+44907%7C1124+Caldwell+44906%7C288+Central+Ave+44905%7C338+Central+Ave+44905%7C382+Central+Ave+44905%7C386+Central+Ave+44905%7C129+Cleveland+Ave+44902%7C667+Courtwright+Blvd+44907%7C114+Distle+Ave+44902%7C114+Distle+Ave+44902%7C231+E+Hanley+Rd+44903%7C697+Fairfax+Ave+44906%7C854+Fairfax+Ave+44903%7C879+Fairfax+Ave+44906%7C20+Ford+Ave+44905%7C27+Ford+Ave+44905%7C520+France+Street+44901%7C190+Gerke+Ave+44903&key=AIzaSyAZ00-LnArurnbvA05t9XS95Mu3aFtXbqY
+{
+   "destination_addresses" : [
+      "2444 Lexington Ave, Mansfield, OH 44907, USA",
+      "290 E 1st St, Mansfield, OH 44902, USA",
+      "328 6th Ave, Mansfield, OH 44905, USA",
+      "223 7th Ave, Mansfield, OH 44905, USA",
+      "371 Apple Ln, Mansfield, OH 44905, USA",
+      "373 Apple Ln, Mansfield, OH 44905, USA",
+      "1066 Averill Ave, Mansfield, OH 44906, USA",
+      "38 Brentwood Rd, Mansfield, OH 44907, USA",
+      "1124 Caldwell St, Mansfield, OH 44906, USA",
+      "288 Central Ave, Mansfield, OH 44905, USA",
+      "338 Central Ave, Mansfield, OH 44905, USA",
+      "382 Central Ave, Mansfield, OH 44905, USA",
+      "386 Central Ave, Mansfield, OH 44905, USA",
+      "129 Cleveland Ave, Mansfield, OH 44902, USA",
+      "667 Courtwright Blvd, Mansfield, OH 44907, USA",
+      "Mansfield, OH 44902, USA",
+      "Mansfield, OH 44902, USA",
+      "231 E Hanley Rd, Mansfield, OH 44903, USA",
+      "697 Fairfax Ave, Mansfield, OH 44906, United States",
+      "854 Fairfax Ave, Mansfield, OH 44906, USA",
+      "879 Fairfax Ave, Mansfield, OH 44906, USA",
+      "20 Ford Ave, Mansfield, OH 44902, USA",
+      "27 Ford Rd N, Mansfield, OH 44905, USA",
+      "520 France St, Mansfield, OH 44903, USA",
+      "190 Gerke Ave, Mansfield, OH 44903, USA"
+   ],
+   "origin_addresses" : [ "437 W 4th St, Mansfield, OH 44903, USA" ],
+   "rows" : [
+      {
+         "elements" : [
+            {
+               "distance" : {
+                  "text" : "8.7 km",
+                  "value" : 8747
+               },
+               "duration" : {
+                  "text" : "12 mins",
+                  "value" : 718
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "2.7 km",
+                  "value" : 2734
+               },
+               "duration" : {
+                  "text" : "6 mins",
+                  "value" : 331
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "3.5 km",
+                  "value" : 3501
+               },
+               "duration" : {
+                  "text" : "7 mins",
+                  "value" : 438
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "3.2 km",
+                  "value" : 3246
+               },
+               "duration" : {
+                  "text" : "7 mins",
+                  "value" : 425
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "6.9 km",
+                  "value" : 6904
+               },
+               "duration" : {
+                  "text" : "11 mins",
+                  "value" : 640
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "6.9 km",
+                  "value" : 6907
+               },
+               "duration" : {
+                  "text" : "11 mins",
+                  "value" : 640
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "4.5 km",
+                  "value" : 4533
+               },
+               "duration" : {
+                  "text" : "7 mins",
+                  "value" : 431
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "4.2 km",
+                  "value" : 4160
+               },
+               "duration" : {
+                  "text" : "8 mins",
+                  "value" : 470
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "3.8 km",
+                  "value" : 3841
+               },
+               "duration" : {
+                  "text" : "6 mins",
+                  "value" : 341
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "3.1 km",
+                  "value" : 3145
+               },
+               "duration" : {
+                  "text" : "6 mins",
+                  "value" : 381
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "3.3 km",
+                  "value" : 3299
+               },
+               "duration" : {
+                  "text" : "7 mins",
+                  "value" : 396
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "3.4 km",
+                  "value" : 3430
+               },
+               "duration" : {
+                  "text" : "7 mins",
+                  "value" : 406
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "3.4 km",
+                  "value" : 3438
+               },
+               "duration" : {
+                  "text" : "7 mins",
+                  "value" : 407
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "2.8 km",
+                  "value" : 2830
+               },
+               "duration" : {
+                  "text" : "6 mins",
+                  "value" : 346
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "4.3 km",
+                  "value" : 4321
+               },
+               "duration" : {
+                  "text" : "8 mins",
+                  "value" : 454
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "2.0 km",
+                  "value" : 2030
+               },
+               "duration" : {
+                  "text" : "5 mins",
+                  "value" : 280
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "2.0 km",
+                  "value" : 2030
+               },
+               "duration" : {
+                  "text" : "5 mins",
+                  "value" : 280
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "9.6 km",
+                  "value" : 9634
+               },
+               "duration" : {
+                  "text" : "12 mins",
+                  "value" : 710
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "3.4 km",
+                  "value" : 3448
+               },
+               "duration" : {
+                  "text" : "5 mins",
+                  "value" : 320
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "3.9 km",
+                  "value" : 3912
+               },
+               "duration" : {
+                  "text" : "6 mins",
+                  "value" : 374
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "4.0 km",
+                  "value" : 3988
+               },
+               "duration" : {
+                  "text" : "6 mins",
+                  "value" : 382
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "2.4 km",
+                  "value" : 2370
+               },
+               "duration" : {
+                  "text" : "5 mins",
+                  "value" : 308
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "7.8 km",
+                  "value" : 7779
+               },
+               "duration" : {
+                  "text" : "11 mins",
+                  "value" : 662
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "2.8 km",
+                  "value" : 2809
+               },
+               "duration" : {
+                  "text" : "5 mins",
+                  "value" : 318
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "0.3 km",
+                  "value" : 282
+               },
+               "duration" : {
+                  "text" : "1 min",
+                  "value" : 46
+               },
+               "status" : "OK"
+            }
+         ]
+      }
+   ],
+   "status" : "OK"
+}

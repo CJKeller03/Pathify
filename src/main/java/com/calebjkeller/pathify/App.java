@@ -6,14 +6,16 @@
 package com.calebjkeller.pathify;
 
 import com.calebjkeller.locationHandling.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
         
 /**
  *
- * @author caleb
+ * @author Caleb Keller
  */
 public class App {
     public static void main(String[] args) {
@@ -24,17 +26,29 @@ public class App {
         try {
             locations = Tools.importDeliveryList(pathToCsv);
             
-            
+            /*
             for (Location loc : locations) {
                 System.out.println(loc.toString());
             }     
-            
+            */
             
             HashMap<String, Long[]> addressMatrix = Tools.generateDistanceMatrix(locations);
             
             for (HashMap.Entry<String, Long[]> entry : addressMatrix.entrySet()) {
                 System.out.println(entry.getKey() + " : " + entry.getValue()[0] + " , " + entry.getValue()[1]);
             }
+            
+            try {
+                FileOutputStream fileOut =
+                new FileOutputStream("addressMatrix.ser");
+                ObjectOutputStream out = new ObjectOutputStream(fileOut);
+                out.writeObject(addressMatrix);
+                out.close();
+                fileOut.close();
+                
+             } catch (IOException i) {
+                i.printStackTrace();
+             }     
             
             //Tools.generateDistanceMatrix(locations);
             

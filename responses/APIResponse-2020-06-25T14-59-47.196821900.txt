@@ -1,0 +1,181 @@
+https://maps.googleapis.com/maps/api/distancematrix/json?origins=542+Bowman+Street+44903&destinations=6+S+Main+St+44874%7C51+Harriet+Drive+44875%7C76+Park+Village+44875%7C27+Pinewood+44875%7C137+Real+Broadwy+44875%7C5553+St+Rt+39+West+44875%7C164+W+Park+Drive+44875%7C8071+Pennel+Road+44878%7C810+Burns+Street+44903%7C69+E+Smiley++%7C220+Atcheson+Ave+%7C308+Spring+Street+44902%7C334+Dale+Ave+44902%7C415+Newman+St+44902&key=AIzaSyAZ00-LnArurnbvA05t9XS95Mu3aFtXbqY
+{
+   "destination_addresses" : [
+      "6 S Main St, Savannah, OH 44874, USA",
+      "Shelby, OH 44875, USA",
+      "76 Park Village, Shelby, OH 44875, USA",
+      "27 Pinewood Dr, Shelby, OH 44875, USA",
+      "Broadway St, Shelby, OH 44875, USA",
+      "5553 OH-39, Shelby, OH 44875, USA",
+      "164 W Park Dr, Shelby, OH 44875, USA",
+      "8071 Pennell Rd, Shiloh, OH 44878, USA",
+      "810 Burns St, Mansfield, OH 44903, USA",
+      "69 E Smiley Ave, Shelby, OH 44875, USA",
+      "220 Atcheson Ave, Mansfield, OH 44903, USA",
+      "308 Spring St, Mansfield, OH 44902, USA",
+      "334 Dale Ave, Mansfield, OH 44902, USA",
+      "415 Newman St, Mansfield, OH 44902, USA"
+   ],
+   "origin_addresses" : [ "542 Bowman St, Mansfield, OH 44903, USA" ],
+   "rows" : [
+      {
+         "elements" : [
+            {
+               "distance" : {
+                  "text" : "27.4 km",
+                  "value" : 27379
+               },
+               "duration" : {
+                  "text" : "24 mins",
+                  "value" : 1436
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "23.2 km",
+                  "value" : 23162
+               },
+               "duration" : {
+                  "text" : "21 mins",
+                  "value" : 1241
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "17.0 km",
+                  "value" : 16986
+               },
+               "duration" : {
+                  "text" : "16 mins",
+                  "value" : 968
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "16.8 km",
+                  "value" : 16794
+               },
+               "duration" : {
+                  "text" : "16 mins",
+                  "value" : 945
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "18.8 km",
+                  "value" : 18791
+               },
+               "duration" : {
+                  "text" : "18 mins",
+                  "value" : 1108
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "22.8 km",
+                  "value" : 22780
+               },
+               "duration" : {
+                  "text" : "23 mins",
+                  "value" : 1362
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "19.6 km",
+                  "value" : 19580
+               },
+               "duration" : {
+                  "text" : "21 mins",
+                  "value" : 1257
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "28.0 km",
+                  "value" : 28046
+               },
+               "duration" : {
+                  "text" : "22 mins",
+                  "value" : 1324
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "2.1 km",
+                  "value" : 2089
+               },
+               "duration" : {
+                  "text" : "4 mins",
+                  "value" : 221
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "19.8 km",
+                  "value" : 19790
+               },
+               "duration" : {
+                  "text" : "17 mins",
+                  "value" : 1034
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "1.7 km",
+                  "value" : 1743
+               },
+               "duration" : {
+                  "text" : "3 mins",
+                  "value" : 198
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "2.8 km",
+                  "value" : 2754
+               },
+               "duration" : {
+                  "text" : "5 mins",
+                  "value" : 327
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "4.0 km",
+                  "value" : 3968
+               },
+               "duration" : {
+                  "text" : "8 mins",
+                  "value" : 482
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "2.8 km",
+                  "value" : 2765
+               },
+               "duration" : {
+                  "text" : "5 mins",
+                  "value" : 289
+               },
+               "status" : "OK"
+            }
+         ]
+      }
+   ],
+   "status" : "OK"
+}

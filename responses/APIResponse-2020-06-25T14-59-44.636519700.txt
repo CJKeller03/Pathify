@@ -1,0 +1,313 @@
+https://maps.googleapis.com/maps/api/distancematrix/json?origins=69+E+Smiley++&destinations=192+Gerke+Ave++44903%7C448+Glessner+Ave+44903%7C411+Grace+St+44905%7C330+Greendale+Ave+44902%7C269+Hammond+Ave+44902%7C465+Hammond+Ave+44902%7C248+12+Hedges+Street++44902%7C386+Henry+Street+44907%7C624+Heritage+Trail+44905%7C448+Howard+Street++44903%7C620+Inwood+Drive+44903%7C1137+Keller+Drive+44905%7C685+King+St+44903%7C1560+Lindaire+4403%7C509+Louise+Ave+44903%7C1494+Maxwell+Drive+44906%7C281+Myers+Ave+44902%7C297+N+Brookwood+Way+44906%7C500+N+Lex+Springmill+44906%7C516+Parry+Ave+44902%7C504+Reed+Street+44903%7C259+Rowland+Ave+44902%7C109+Rustic+Lane+44907%7C20+S+Linden+44906%7C196+S+Mulberry+Street+44902&key=AIzaSyAZ00-LnArurnbvA05t9XS95Mu3aFtXbqY
+{
+   "destination_addresses" : [
+      "192 Gerke Ave, Mansfield, OH 44903, USA",
+      "448 Glessner Ave, Mansfield, OH 44903, USA",
+      "411 Grace St, Mansfield, OH 44905, USA",
+      "330 Greendale Ave, Mansfield, OH 44902, USA",
+      "269 Hammond Ave, Mansfield, OH 44902, USA",
+      "465 Hammond Ave, Mansfield, OH 44902, USA",
+      "12 Hedges St #248, Mansfield, OH 44902, USA",
+      "386 Henry St, Mansfield, OH 44907, USA",
+      "624 Wagon Wheel Trail E, Mansfield, OH 44905, USA",
+      "448 Howard St, Mansfield, OH 44903, USA",
+      "620 Inwood Dr, Mansfield, OH 44903, USA",
+      "1137 Keller Dr, Mansfield, OH 44905, USA",
+      "685 King St, Mansfield, OH 44903, USA",
+      "1560 Lindaire Ave, San Jose, CA 95128, USA",
+      "509 Louise Ave, Mansfield, OH 44903, USA",
+      "1494 Maxwell Dr, Mansfield, OH 44906, USA",
+      "281 Myers Ave, Mansfield, OH 44902, USA",
+      "297 N Brookwood Way, Mansfield, OH 44906, USA",
+      "500 N Lexington-Springmill Rd, Mansfield, OH 44906, USA",
+      "516 Parry Ave, Mansfield, OH 44905, USA",
+      "504 Reed St, Mansfield, OH 44903, USA",
+      "259 Rowland Ave, Mansfield, OH 44903, USA",
+      "109 Rustic Ln, Mansfield, OH 44907, USA",
+      "20 S Linden Rd, Mansfield, OH 44906, USA",
+      "196 S Mulberry St, Mansfield, OH 44903, USA"
+   ],
+   "origin_addresses" : [ "69 E Smiley Ave, Shelby, OH 44875, USA" ],
+   "rows" : [
+      {
+         "elements" : [
+            {
+               "distance" : {
+                  "text" : "19.7 km",
+                  "value" : 19687
+               },
+               "duration" : {
+                  "text" : "20 mins",
+                  "value" : 1221
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "20.5 km",
+                  "value" : 20493
+               },
+               "duration" : {
+                  "text" : "23 mins",
+                  "value" : 1360
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "22.5 km",
+                  "value" : 22493
+               },
+               "duration" : {
+                  "text" : "22 mins",
+                  "value" : 1296
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "22.2 km",
+                  "value" : 22181
+               },
+               "duration" : {
+                  "text" : "26 mins",
+                  "value" : 1547
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "21.1 km",
+                  "value" : 21146
+               },
+               "duration" : {
+                  "text" : "24 mins",
+                  "value" : 1468
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "21.8 km",
+                  "value" : 21768
+               },
+               "duration" : {
+                  "text" : "25 mins",
+                  "value" : 1519
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "20.7 km",
+                  "value" : 20705
+               },
+               "duration" : {
+                  "text" : "23 mins",
+                  "value" : 1373
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "21.5 km",
+                  "value" : 21473
+               },
+               "duration" : {
+                  "text" : "25 mins",
+                  "value" : 1476
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "23.6 km",
+                  "value" : 23576
+               },
+               "duration" : {
+                  "text" : "24 mins",
+                  "value" : 1443
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "18.3 km",
+                  "value" : 18259
+               },
+               "duration" : {
+                  "text" : "18 mins",
+                  "value" : 1085
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "27.8 km",
+                  "value" : 27832
+               },
+               "duration" : {
+                  "text" : "24 mins",
+                  "value" : 1466
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "24.2 km",
+                  "value" : 24224
+               },
+               "duration" : {
+                  "text" : "23 mins",
+                  "value" : 1408
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "18.3 km",
+                  "value" : 18273
+               },
+               "duration" : {
+                  "text" : "18 mins",
+                  "value" : 1082
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "3,968 km",
+                  "value" : 3967508
+               },
+               "duration" : {
+                  "text" : "1 day 13 hours",
+                  "value" : 132222
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "20.2 km",
+                  "value" : 20223
+               },
+               "duration" : {
+                  "text" : "19 mins",
+                  "value" : 1136
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "17.9 km",
+                  "value" : 17917
+               },
+               "duration" : {
+                  "text" : "20 mins",
+                  "value" : 1191
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "20.4 km",
+                  "value" : 20437
+               },
+               "duration" : {
+                  "text" : "23 mins",
+                  "value" : 1359
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "17.7 km",
+                  "value" : 17735
+               },
+               "duration" : {
+                  "text" : "20 mins",
+                  "value" : 1212
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "16.1 km",
+                  "value" : 16082
+               },
+               "duration" : {
+                  "text" : "19 mins",
+                  "value" : 1143
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "23.9 km",
+                  "value" : 23859
+               },
+               "duration" : {
+                  "text" : "23 mins",
+                  "value" : 1358
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "18.5 km",
+                  "value" : 18513
+               },
+               "duration" : {
+                  "text" : "19 mins",
+                  "value" : 1131
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "19.4 km",
+                  "value" : 19416
+               },
+               "duration" : {
+                  "text" : "21 mins",
+                  "value" : 1259
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "22.7 km",
+                  "value" : 22707
+               },
+               "duration" : {
+                  "text" : "27 mins",
+                  "value" : 1596
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "18.7 km",
+                  "value" : 18715
+               },
+               "duration" : {
+                  "text" : "20 mins",
+                  "value" : 1210
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "20.5 km",
+                  "value" : 20543
+               },
+               "duration" : {
+                  "text" : "23 mins",
+                  "value" : 1354
+               },
+               "status" : "OK"
+            }
+         ]
+      }
+   ],
+   "status" : "OK"
+}

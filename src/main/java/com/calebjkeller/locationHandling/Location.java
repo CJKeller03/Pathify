@@ -6,8 +6,9 @@
 package com.calebjkeller.locationHandling;
 
 /**
- *
- * @author caleb
+ * Used to store information about a location that needs deliveries.
+ * 
+ * @author Caleb Keller
  */
 public class Location {
     static final String[] defaultHeader = {"First Name", "Last Name", "House #",
@@ -42,6 +43,14 @@ public class Location {
         this.overwriteDataFromTable(table, header);
     }
     
+    /**
+     * Set all of this Location object's variables from a data table with
+     * headers identifying what kind of information is in each index of the table.
+     * Currently, only very specific headings work.
+     * 
+     * @param table An array of Strings containing data about a Location.
+     * @param header An array of Strings describing the type of data at each index.
+     */
     public void overwriteDataFromTable(String[] table, String[] header) {
         int numArgs = Math.min(table.length, header.length);
         
@@ -87,6 +96,12 @@ public class Location {
         }
     }
     
+    /**
+     * Get the address that uniquely identifies this Location.
+     * The zip code is included is it is known.
+     * 
+     * @return A String representing this Location's address.
+     */
     public String getUniqueAddress() {
         String out = "";
         out += this.houseNumber + " ";
@@ -99,6 +114,12 @@ public class Location {
         return out;
     }
     
+    /**
+     * Get the full address for this location, excluding the state it is in.
+     * The zip code and city are included if they are known.
+     * 
+     * @return A String representing this Location's address.
+     */
     public String getCompleteAddress(){
         String out = "";
         out += this.houseNumber + " ";
@@ -115,6 +136,11 @@ public class Location {
         return out;
     }
     
+    /**
+     * Create a String representation of this Location.
+     * 
+     * @return A String representing this Location.
+     */
     public String toString() {
         String out = "";
         out += this.firstName + " ";
@@ -124,6 +150,13 @@ public class Location {
         return out;
     }
     
+    /**
+     * Check if this location has an address that uniquely identifies it.
+     * Currently, this doesn't actually check if the address exists,
+     * only that it has a house address and street name.
+     * 
+     * @return Whether the address for this Location is valid.
+     */
     public boolean hasValidAddress() {
         return !(this.houseNumber.matches("[^\\w\\d]+")) && !(this.streetName.matches("[^\\w\\d]+"));
     }

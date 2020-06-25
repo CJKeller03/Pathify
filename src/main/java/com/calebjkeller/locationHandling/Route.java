@@ -8,8 +8,9 @@ package com.calebjkeller.locationHandling;
 import java.util.ArrayList;
 
 /**
- *
- * @author caleb
+ * Contains information about a route visiting multiple Locations.
+ * 
+ * @author Caleb Keller
  */
 public class Route {
     ArrayList<Location> locations;
