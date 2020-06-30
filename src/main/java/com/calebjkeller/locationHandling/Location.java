@@ -5,6 +5,18 @@
  */
 package com.calebjkeller.locationHandling;
 
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Scanner;
+import org.json.simple.JSONArray;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import org.apache.commons.text.*;
+
 /**
  * Used to store information about a location that needs deliveries.
  * 
@@ -20,11 +32,8 @@ public class Location {
     String lastName;
     String phoneNumber;
     
-    String houseNumber;
-    String streetName;
-    String aptNumber;
-    String cityName;
-    String zipCode;
+    public HashMap<String, String> inputAddressComponents = new HashMap<>();
+    public HashMap<String, String> verifiedAddressComponents = new HashMap<>();
     
     double latitude;
     double longitude;
@@ -63,19 +72,19 @@ public class Location {
                     this.lastName = table[i];
                     break;
                 case "House #":
-                    this.houseNumber = table[i];
+                    this.inputAddressComponents.put("houseNumber", table[i]);
                     break;
                 case "Street":
-                    this.streetName = table[i];
+                    this.inputAddressComponents.put("streetName", table[i]);
                     break;
                 case "Apt #         Lot #":
-                    this.aptNumber = table[i];
+                    this.inputAddressComponents.put("aptNumber", table[i]);
                     break;
                 case "City":
-                    this.cityName = table[i];
+                    this.inputAddressComponents.put("cityName", table[i]);
                     break;
                 case "Zip Code":
-                    this.zipCode = table[i];
+                    this.inputAddressComponents.put("zipCode", table[i]);
                     break;
                 case "Phone #":
                     this.phoneNumber = table[i];
@@ -104,11 +113,11 @@ public class Location {
      */
     public String getUniqueAddress() {
         String out = "";
-        out += this.houseNumber + " ";
-        out += this.streetName + " ";
+        out += this.verifiedAddressComponents.get("houseNumber") + " ";
+        out += this.verifiedAddressComponents.get("streetName") + " ";
         
-        if (this.zipCode != null) {
-            out += this.zipCode;
+        if (this.verifiedAddressComponents.containsKey("zipCode")) {
+            this.verifiedAddressComponents.get("zipCode");
         }
         
         return out;
@@ -122,15 +131,15 @@ public class Location {
      */
     public String getCompleteAddress(){
         String out = "";
-        out += this.houseNumber + " ";
-        out += this.streetName + " ";
+        out += this.verifiedAddressComponents.get("houseNumber") + " ";
+        out += this.verifiedAddressComponents.get("streetName") + " ";
         
-        if (this.cityName != null) {
-            out += this.cityName + " ";
+        if (this.verifiedAddressComponents.containsKey("cityName")) {
+            out += this.verifiedAddressComponents.get("cityName") + " ";
         }
         
-        if (this.zipCode != null) {
-            out += this.zipCode;
+        if (this.verifiedAddressComponents.containsKey("zipCode")) {
+            this.verifiedAddressComponents.get("zipCode");
         }
         
         return out;
@@ -158,6 +167,7 @@ public class Location {
      * @return Whether the address for this Location is valid.
      */
     public boolean hasValidAddress() {
-        return !(this.houseNumber.matches("[^\\w\\d]+")) && !(this.streetName.matches("[^\\w\\d]+"));
+        //return !(this.houseNumber.matches("[^\\w\\d]+")) && !(this.streetName.matches("[^\\w\\d]+"));
+        return true;
     }
 }

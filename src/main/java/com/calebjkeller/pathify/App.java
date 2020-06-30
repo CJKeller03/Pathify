@@ -26,13 +26,18 @@ public class App {
         try {
             locations = Tools.importDeliveryList(pathToCsv);
             
+            
+            
+            
             /*
             for (Location loc : locations) {
                 System.out.println(loc.toString());
             }     
             */
             
-            HashMap<String, Long[]> addressMatrix = Tools.generateDistanceMatrix(locations);
+            //HashMap<String, Long[]> addressMatrix = Tools.generateDistanceMatrix(locations);
+            
+            /*
             
             for (HashMap.Entry<String, Long[]> entry : addressMatrix.entrySet()) {
                 System.out.println(entry.getKey() + " : " + entry.getValue()[0] + " , " + entry.getValue()[1]);
@@ -50,6 +55,8 @@ public class App {
                 i.printStackTrace();
              }     
             
+            */
+
             //Tools.generateDistanceMatrix(locations);
             
         } catch (Exception e) {

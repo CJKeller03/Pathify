@@ -6,8 +6,10 @@
 package com.calebjkeller.pathify;
 
 import com.calebjkeller.locationHandling.*;
+import components.ListDialog;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.io.FileReader;
@@ -18,6 +20,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Scanner;
+import javax.swing.JFrame;
 
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
@@ -32,34 +35,94 @@ public class Tools {
     
     /**
      * Generate an ArrayList of Location objects from the data stored in
-     * a .csv file. The first line of the file is assumed to be the header, which
+     * a csv file. The first line of the file is assumed to be the header, which
      * is used to identify the data stored in each column.
      * 
      * @param filename The name (and possibly location) of the .csv file.
      * @return The ArrayList of Location objects.
      * @throws IOException 
      */
-    public static ArrayList<Location> importDeliveryList(String filename) throws IOException {
+    public static ArrayList<Location> importDeliveryList(File csvFile, JFrame frame) {
         
         // Create the line number reader (a simple bufferedreader could be used here).
-        FileReader fReader = new FileReader(filename);
-        LineNumberReader lnr = new LineNumberReader(fReader);
+        System.out.println("Started");
         
         ArrayList<Location> locations = new ArrayList<Location>();
         
-        // Remove all characters that shouldn't be present in the file.
-        // This is necessary because for some reason, the first line of the .csv
-        // file contains some garbage at the beginning, which messes up the 
-        // code that interprets the header to put the data in the correct place.
-        
-        String headerAsString = lnr.readLine().replaceAll("[^ ,#:()a-zA-Z0-9]", "");
-        String[] header = headerAsString.split(",");
-        
-        String line;
-        while ((line = lnr.readLine()) != null) {
-            locations.add(new Location(line.replaceAll("[^ ,#:()a-zA-Z0-9]", "").split(","), header));
+        try {
+            FileReader fReader = new FileReader(csvFile);
+            LineNumberReader lnr = new LineNumberReader(fReader);
+            
+            // Remove all characters that shouldn't be present in the file.
+            // This is necessary because for some reason, the first line of the .csv
+            // file contains some garbage at the beginning, which messes up the 
+            // code that interprets the header to put the data in the correct place.
+
+            String headerAsString = lnr.readLine().replaceAll("[^ ,#:()a-zA-Z0-9]", "");
+            String[] header = headerAsString.split(",");
+
+            String line;
+            while ((line = lnr.readLine()) != null) {
+                System.out.println(line);
+                
+                Location curLocation = new Location(line.replaceAll("[^ ,#:()a-zA-Z0-9]", "").split(","), header);
+                String[] arcGISCandidates = getArcGISCandidates(curLocation);
+
+                boolean foundRealAddress = false;
+                String inputStreetAddress = curLocation.inputAddressComponents.get("houseNumber") + " " +
+                                            curLocation.inputAddressComponents.get("streetName");
+                inputStreetAddress = inputStreetAddress.toLowerCase();
+
+                for (String address : arcGISCandidates) {
+                    String realStreetAddress = address.split(",")[0];
+                    System.out.println(realStreetAddress + " : " + inputStreetAddress);
+                    
+                    if (realStreetAddress.toLowerCase().equals(inputStreetAddress)) {
+                        foundRealAddress = true;
+                        String[] splitAddress = address.split(",");
+                        curLocation.verifiedAddressComponents.put("streetAddress", splitAddress[0]);
+                        curLocation.verifiedAddressComponents.put("cityName", splitAddress[1]);
+                        curLocation.verifiedAddressComponents.put("state", splitAddress[2]);
+                        curLocation.verifiedAddressComponents.put("zipCode", splitAddress[3]);
+                        break;
+                    }
+
+                }
+
+                if (!foundRealAddress) {
+                    String[] options = java.util.Arrays.copyOf(arcGISCandidates, arcGISCandidates.length+1);
+                    options[options.length - 1] = "None of the above";
+                    System.out.println(curLocation.getCompleteAddress());
+                    String correctAddress = ListDialog.showDialog(frame,
+                                          null,
+                                          "The address: " + curLocation.getCompleteAddress() +
+                                                  " could not be found.\n Please select"
+                                                  + " the correct address from the list"
+                                                  + " below.",
+                                          "Verify address",
+                                          options,
+                                          "None of the above",
+                                          "                                        ");
+
+                    if (correctAddress != null &&
+                        correctAddress != "None of the above") {
+
+                        String[] splitAddress = correctAddress.split(",");
+                        curLocation.verifiedAddressComponents.put("streetAddress", splitAddress[0]);
+                        curLocation.verifiedAddressComponents.put("cityName", splitAddress[1]);
+                        curLocation.verifiedAddressComponents.put("state", splitAddress[2]);
+                        curLocation.verifiedAddressComponents.put("zipCode", splitAddress[3]);
+
+                        locations.add(curLocation);
+
+                    }
+                }
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-        
         return locations;
     }
     
@@ -153,7 +216,10 @@ public class Tools {
                             java.time.LocalDateTime.now().toString().replace(":","-") +
                             ".txt";
                     FileWriter file = new FileWriter(filename);
-                    file.write(connection.getURL().toString() + "\n");
+                    
+                    // Whoops, this line leaked my original API key...
+                    //file.write(connection.getURL().toString() + "\n");
+                    
                     file.write(response);
                     file.flush();
                     file.close();
@@ -263,4 +329,63 @@ public class Tools {
         return addressMatrix;
         
     }
+    
+    /**
+     * Find the standard postal address that refers to the same location as the
+     * input address. If the address does not exist, but a similar address likely
+     * to refer to the same location is found, the Location object's 
+     * verifiedAddressComponents entries will be set, and this method will return false.
+     * If no address can be found, this method will return false without setting
+     * the verifiedAddressComponents entries.
+     * 
+     * @return Whether the verification was successful.
+     */
+    public static String[] getArcGISCandidates(Location loc) {
+        String url = "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates";
+        String parameterFormat = "f=json&address=%s&city=%s&zip=%s&state=Ohio";
+        
+        String charset = java.nio.charset.StandardCharsets.UTF_8.name();
+        String address = 
+                        loc.inputAddressComponents.get("houseNumber") + " " +
+                        loc.inputAddressComponents.get("streetName");
+        
+        try {
+            String parameters = String.format(parameterFormat, 
+                                        URLEncoder.encode(address, charset),
+                                        URLEncoder.encode(loc.inputAddressComponents.get("cityName"), charset),
+                                        URLEncoder.encode(loc.inputAddressComponents.get("zipCode"), charset)
+                                        );
+
+            // Open a connection to the API
+            URLConnection connection = new URL(url + "?" + parameters).openConnection();
+            connection.setRequestProperty("Accept-Charset", charset);
+            Scanner responseStream = new Scanner(connection.getInputStream());
+            System.out.println(connection.toString());
+            
+            String response = "";
+            
+            while (responseStream.hasNext()) {
+                response += responseStream.nextLine();
+            }
+            
+            responseStream.close();
+            
+            JSONObject asJson = (JSONObject) new JSONParser().parse(response);
+            JSONArray addressList = (JSONArray) asJson.get("candidates");
+            
+            String[] candidates = new String[addressList.size()];
+            
+            for (int i = 0; i < addressList.size(); i++) {
+                JSONObject result = (JSONObject) addressList.get(i);
+                 candidates[i] = (String) result.get("address");
+                 
+            }
+            
+            return candidates;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }                
+    }    
 }
