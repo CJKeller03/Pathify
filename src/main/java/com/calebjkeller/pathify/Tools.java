@@ -21,6 +21,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Scanner;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
@@ -72,49 +73,97 @@ public class Tools {
                 String inputStreetAddress = curLocation.inputAddressComponents.get("houseNumber") + " " +
                                             curLocation.inputAddressComponents.get("streetName");
                 inputStreetAddress = inputStreetAddress.toLowerCase();
-
-                for (String address : arcGISCandidates) {
-                    String realStreetAddress = address.split(",")[0];
-                    System.out.println(realStreetAddress + " : " + inputStreetAddress);
-                    
-                    if (realStreetAddress.toLowerCase().equals(inputStreetAddress)) {
-                        foundRealAddress = true;
+                
+                String inputCityName = curLocation.inputAddressComponents.get("cityName");
+                inputCityName = inputCityName.toLowerCase();
+                
+                String inputZipCode = curLocation.inputAddressComponents.get("zipCode");
+                
+                
+                while (!foundRealAddress) {
+                    for (String address : arcGISCandidates) {
                         String[] splitAddress = address.split(",");
-                        curLocation.verifiedAddressComponents.put("streetAddress", splitAddress[0]);
-                        curLocation.verifiedAddressComponents.put("cityName", splitAddress[1]);
-                        curLocation.verifiedAddressComponents.put("state", splitAddress[2]);
-                        curLocation.verifiedAddressComponents.put("zipCode", splitAddress[3]);
-                        break;
+                        //System.out.println(realStreetAddress + " : " + inputStreetAddress);
+                        
+                        
+
+                        if (splitAddress[0].toLowerCase().equals(inputStreetAddress) &&
+                            splitAddress[1].toLowerCase().replace(" ", "").equals(inputCityName) &&
+                            splitAddress[3].replace(" ", "").equals(inputZipCode)) {
+
+                            foundRealAddress = true;
+
+                            curLocation.verifiedAddressComponents.put("streetAddress", splitAddress[0]);
+                            curLocation.verifiedAddressComponents.put("cityName", splitAddress[1]);
+                            curLocation.verifiedAddressComponents.put("state", splitAddress[2]);
+                            curLocation.verifiedAddressComponents.put("zipCode", splitAddress[3]);
+                            break;
+                        }
+
                     }
 
-                }
+                    if (!foundRealAddress) {
+                        String[] options = java.util.Arrays.copyOf(arcGISCandidates, arcGISCandidates.length+1);
+                        options[options.length - 1] = "None of the above";
+                        System.out.println(curLocation.getCompleteAddress());
+                        String userInput = ListDialog.showDialog(frame,
+                                              null,
+                                              "The address: " + inputStreetAddress + " " +
+                                                      curLocation.inputAddressComponents.get("cityName") + " " +
+                                                      curLocation.inputAddressComponents.get("zipCode") + " " +
+                                                      " could not be found.\n Please select"
+                                                      + " the correct address from the list"
+                                                      + " below.",
+                                              "Verify address",
+                                              options,
+                                              "None of the above",
+                                              "                                        ");
 
-                if (!foundRealAddress) {
-                    String[] options = java.util.Arrays.copyOf(arcGISCandidates, arcGISCandidates.length+1);
-                    options[options.length - 1] = "None of the above";
-                    System.out.println(curLocation.getCompleteAddress());
-                    String correctAddress = ListDialog.showDialog(frame,
-                                          null,
-                                          "The address: " + curLocation.getCompleteAddress() +
-                                                  " could not be found.\n Please select"
-                                                  + " the correct address from the list"
-                                                  + " below.",
-                                          "Verify address",
-                                          options,
-                                          "None of the above",
-                                          "                                        ");
+                        if (!userInput.equals("None of the above") &&
+                                !userInput.equals("Stop")) {
 
-                    if (correctAddress != null &&
-                        correctAddress != "None of the above") {
+                            String[] splitAddress = userInput.split(",");
+                            curLocation.verifiedAddressComponents.put("streetAddress", splitAddress[0]);
+                            curLocation.verifiedAddressComponents.put("cityName", splitAddress[1]);
+                            curLocation.verifiedAddressComponents.put("state", splitAddress[2]);
+                            curLocation.verifiedAddressComponents.put("zipCode", splitAddress[3]);
+                            
+                            locations.add(curLocation);
+                            
+                            foundRealAddress = true;
 
-                        String[] splitAddress = correctAddress.split(",");
-                        curLocation.verifiedAddressComponents.put("streetAddress", splitAddress[0]);
-                        curLocation.verifiedAddressComponents.put("cityName", splitAddress[1]);
-                        curLocation.verifiedAddressComponents.put("state", splitAddress[2]);
-                        curLocation.verifiedAddressComponents.put("zipCode", splitAddress[3]);
+                        } else if (userInput.equals("Stop")) {
+                            return null;
+                        } else if (userInput.equals("None of the above")) {
 
-                        locations.add(curLocation);
+                            String message = "Please enter the correct address for " + 
+                                              curLocation.firstName + " " +
+                                              curLocation.lastName + ".\n" +
+                                              "(Including the city and zip code, if known)\n" +
+                                              "The supplied address was:\n" +
+                                              inputStreetAddress + " , " +
+                                              curLocation.inputAddressComponents.get("cityName") + " , " +
+                                              curLocation.inputAddressComponents.get("zipCode");
 
+                            userInput = (String) JOptionPane.showInputDialog(
+                                                        frame,
+                                                        message,
+                                                        "Provide correct address",
+                                                        JOptionPane.PLAIN_MESSAGE,
+                                                        null,
+                                                        null,
+                                                        "");
+                            
+                            if (userInput != null && userInput.length() > 0) {
+                                String parameters = "f=json&SingleLine=%s";
+                                String[] paramArr = {userInput};
+                                arcGISCandidates = getArcGISCandidates(parameters, paramArr);
+                            } else {
+                                return null;
+                            }
+
+
+                        }
                     }
                 }
             }
@@ -341,23 +390,40 @@ public class Tools {
      * @return Whether the verification was successful.
      */
     public static String[] getArcGISCandidates(Location loc) {
-        String url = "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates";
-        String parameterFormat = "f=json&address=%s&city=%s&zip=%s&state=Ohio";
-        
-        String charset = java.nio.charset.StandardCharsets.UTF_8.name();
+
         String address = 
                         loc.inputAddressComponents.get("houseNumber") + " " +
                         loc.inputAddressComponents.get("streetName");
         
+        String cityName = loc.inputAddressComponents.get("cityName");
+        String zipCode = loc.inputAddressComponents.get("zipCode");
+        
+        return getArcGISCandidates(address, cityName, zipCode);
+    }
+    
+    public static String[] getArcGISCandidates(String streetAddress, String cityName, String zipCode) {
+        
+        String parameterFormat = "f=json&address=%s&city=%s&zip=%s&state=Ohio";
+        String[] parameters = {streetAddress, cityName, zipCode};
+        
+        return getArcGISCandidates(parameterFormat, parameters);
+    }
+    
+    public static String[] getArcGISCandidates(String parameterFormat, String[] parameters) {
+        
+        String url = "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates"; 
+        String charset = java.nio.charset.StandardCharsets.UTF_8.name();
+        
         try {
-            String parameters = String.format(parameterFormat, 
-                                        URLEncoder.encode(address, charset),
-                                        URLEncoder.encode(loc.inputAddressComponents.get("cityName"), charset),
-                                        URLEncoder.encode(loc.inputAddressComponents.get("zipCode"), charset)
-                                        );
+            for (int i = 0; i < parameters.length; i++) {
+                parameters[i] = URLEncoder.encode(parameters[i], charset);
+            }
+            
+            String encodedParameters = String.format(parameterFormat, parameters);
+                                                      
 
             // Open a connection to the API
-            URLConnection connection = new URL(url + "?" + parameters).openConnection();
+            URLConnection connection = new URL(url + "?" + encodedParameters).openConnection();
             connection.setRequestProperty("Accept-Charset", charset);
             Scanner responseStream = new Scanner(connection.getInputStream());
             System.out.println(connection.toString());

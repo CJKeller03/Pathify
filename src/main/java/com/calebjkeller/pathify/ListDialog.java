@@ -104,7 +104,7 @@ public class ListDialog extends JDialog
         super(frame, title, true);
 
         //Create and initialize the buttons.
-        JButton cancelButton = new JButton("Cancel");
+        JButton cancelButton = new JButton("Stop");
         cancelButton.addActionListener(this);
         //
         final JButton setButton = new JButton("Select");
@@ -197,6 +197,8 @@ public class ListDialog extends JDialog
     public void actionPerformed(ActionEvent e) {
         if ("Set".equals(e.getActionCommand())) {
             ListDialog.value = (String)(list.getSelectedValue());
+        } else {
+            ListDialog.value = "Stop";
         }
         ListDialog.dialog.setVisible(false);
     }

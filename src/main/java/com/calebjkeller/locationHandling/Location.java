@@ -28,8 +28,8 @@ public class Location {
                                             "City", "Zip Code", "Phone #", "Kids",
                                             "Adults", "Seniors", "Total", "Notes:"};
     
-    String firstName;
-    String lastName;
+    public String firstName;
+    public String lastName;
     String phoneNumber;
     
     public HashMap<String, String> inputAddressComponents = new HashMap<>();

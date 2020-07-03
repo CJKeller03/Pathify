@@ -19,6 +19,14 @@ import java.util.HashMap;
  */
 public class App {
     public static void main(String[] args) {
+         
+        String test = "1: %s 2: %s 3: %s";
+        
+        String[] params = {"a","b","c"};
+        test = String.format(test, params);
+        
+        System.out.println(test);
+        
         
         String pathToCsv = "M25OC Home Delivery List - CSV (Non-Locked only).csv";
         ArrayList<Location> locations;
