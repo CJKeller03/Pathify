@@ -17,6 +17,7 @@
 package com.calebjkeller.pathify.wizard.pages;
 
 import com.calebjkeller.pathify.locationHandling.Location;
+import com.calebjkeller.pathify.locationHandling.LocationTools;
 import com.calebjkeller.pathify.wizard.WizardModel;
 import com.calebjkeller.pathify.wizard.WizardPanelController;
 import java.util.ArrayList;
@@ -39,16 +40,17 @@ public class AddressSelectWizardPage extends javax.swing.JPanel implements Wizar
     private Location loc;
     
     private boolean isSkip = false;
+    private boolean customAddressMode = false;
     
     /**
      * Creates new form WizardPage
      */
     public AddressSelectWizardPage(String ID, WizardPanelController controller,
-                                   String[] addressOptions, Location loc) {
+                                   Location loc) {
         this.ID = ID;
         this.controller = controller;
         
-        this.addressOptions = addressOptions;
+        addressOptions = LocationTools.getArcGISCandidates(loc);
         this.loc = loc;
         
         initComponents();
@@ -80,7 +82,7 @@ public class AddressSelectWizardPage extends javax.swing.JPanel implements Wizar
             skippedAddresses.add(addressSelectBox.getSelectedValue());
         }
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -127,6 +129,9 @@ public class AddressSelectWizardPage extends javax.swing.JPanel implements Wizar
         userAddressField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 userAddressFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                userAddressFieldFocusLost(evt);
             }
         });
         userAddressField.addActionListener(new java.awt.event.ActionListener() {
@@ -185,9 +190,33 @@ public class AddressSelectWizardPage extends javax.swing.JPanel implements Wizar
     }//GEN-LAST:event_skipButtonActionPerformed
 
     private void enterAddressButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterAddressButtonActionPerformed
-        userAddressField.setVisible(true);
-        enterAddressButton.setVisible(false);
-        this.updateUI();
+        if (!customAddressMode) {
+            controller.setNext(false);
+            customAddressMode = true;
+            
+            enterAddressButton.setText("Validate");
+            enterAddressButton.setEnabled(false);
+            
+            userAddressField.setVisible(true);
+            jScrollPane1.setVisible(false);
+
+            this.updateUI();
+        } else {
+            
+            customAddressMode = false;   
+            
+            addressOptions = LocationTools.getArcGISCandidates(userAddressField.getText());
+            addressSelectBox.setListData(addressOptions);
+            
+            description.setText(String.format(descriptionText, loc.firstName + " " + loc.lastName, 
+                                                               userAddressField.getText()));
+            enterAddressButton.setText("Enter Different Address");
+            enterAddressButton.setEnabled(true);
+            
+            userAddressField.setVisible(false);
+            jScrollPane1.setVisible(true);
+            
+        }
     }//GEN-LAST:event_enterAddressButtonActionPerformed
 
     private void userAddressFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_userAddressFieldFocusGained
@@ -196,13 +225,26 @@ public class AddressSelectWizardPage extends javax.swing.JPanel implements Wizar
         }
     }//GEN-LAST:event_userAddressFieldFocusGained
 
+    private void userAddressFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_userAddressFieldFocusLost
+        if (customAddressMode) {
+            String userText = userAddressField.getText();
+            if (userText == null || userText.equals("")) {
+                userAddressField.setText("Enter address (including zip code and city, if known)");
+                enterAddressButton.setEnabled(false);
+            } else {
+                enterAddressButton.setEnabled(true);
+            }
+        }
+    }//GEN-LAST:event_userAddressFieldFocusLost
+
     private void userAddressFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userAddressFieldActionPerformed
-        String userText = userAddressField.getText();
-        
-        if ((userText) != null && !userText.equals("")) {
-            controller.setNext(true);
-        } else {
-            controller.setNext(false);
+        if (customAddressMode) {
+            String userText = userAddressField.getText();
+            if (!(userText == null || userText.equals(""))) {
+                enterAddressButton.setEnabled(true);
+            } else {
+                enterAddressButton.setEnabled(false);
+            }
         }
     }//GEN-LAST:event_userAddressFieldActionPerformed
 

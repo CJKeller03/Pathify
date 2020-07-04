@@ -28,7 +28,7 @@ import java.util.ArrayList;
  */
 public class DeliveryList {
     
-    private ArrayList locations;
+    private ArrayList<Location> locations;
     private boolean isSafe;
     
     public DeliveryList(File csvList) {
@@ -46,7 +46,7 @@ public class DeliveryList {
         
         try {
             reader = new BufferedReader(new FileReader(csvList));
-            String[] header = reader.readLine().split(",");
+            String[] header = reader.readLine().replaceAll("[^ ,#:()a-zA-Z0-9]", "").split(",");
             
             String line;
             
@@ -65,6 +65,14 @@ public class DeliveryList {
     
     public ArrayList getLocations() {
         return this.locations;
+    }
+    
+    public Location getLocation(int index) {
+        return this.locations.get(index);
+    }    
+    
+    public void setSafeAddresses(String[] addresses) {
+        
     }
     
     

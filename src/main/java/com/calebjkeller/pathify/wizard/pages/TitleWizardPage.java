@@ -56,9 +56,9 @@ public class TitleWizardPage extends javax.swing.JPanel implements WizardPageInt
     
     public void disable(WizardModel model) {
         if (this.addressTable == null) {
-            model.setObject("doGenerate", false);
-        } else {
             model.setObject("doGenerate", true);
+        } else {
+            model.setObject("doGenerate", false);
             model.setObject("addressTable", this.addressTable);
         }
         

@@ -34,34 +34,54 @@ public class PathifyWizardPageGenerator implements WizardPageGeneratorInterface 
     private WizardModel model;
     private ArrayList<BaseWizardPage> history;
     
+    private DeliveryList list;
+    
+    private String state = "start";
+    
+    
+    private int curLocation;
+    
     public PathifyWizardPageGenerator() {
         
     }
     
     public WizardPageInterface nextPage(WizardPanelController controller) {
         
-        if (!model.hasObject("doGenerate")) {
-            System.out.println("serving title...");
-            return new TitleWizardPage("title", controller);
+        while (true) {
+            switch (state) {
+                case "start":
+                    
+                    state = "started";
+                    return new TitleWizardPage("title", controller);
+                    
+                case "started":
+                    list = new DeliveryList((File) model.getObject("csvFile"));
+                    
+                    if ((Boolean) model.getObject("doGenerate")) {
+                        state = "generateAddresses";
+                    }
+                    
+                    break;
+
+                case "generateAddresses":
+
+                    if (!model.hasObject("selectedAddress")) {
+                        curLocation = 0;
+                    } else {
+                        String selectedAddress = (String) model.getObject("selectedAddress");
+                        if (!selectedAddress.equals("SKIP")) {
+                            list.getLocation(curLocation).setSafeAddress(selectedAddress);
+                        }
+                        curLocation++;
+                    }
+
+                    return new AddressSelectWizardPage("select", controller, list.getLocation(curLocation));
+
+            }
         }
         
-        String[] arr = {"a", "b"};
-        String[] locArr = {"Joe", "Schmo", "100", "somewhere st", "1", "nowhere",
-                           "00000", "1234567890", "0", "0", "0", "1", "exists?"};
         
-        
-        Location tmpLoc = new Location(locArr);
-        
-        System.out.println("serving select page...");
-        return new AddressSelectWizardPage("test", controller, arr, tmpLoc);
-        
-        DeliveryList list = new DeliveryList((File) model.getObject("csvFile"));
-        
-        if (! (Boolean) model.getObject("doGenerate")) {
-            
-        }
-        
-        return new BaseWizardPage("none", controller);
+        //return new BaseWizardPage("none", controller);
         
     }
     

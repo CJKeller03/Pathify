@@ -32,7 +32,9 @@ public class Location {
     public String lastName;
     String phoneNumber;
     
-    public HashMap address = new HashMap<String, String>();
+    public HashMap<String, String> address = new HashMap<String, String>();
+    
+    public String oneLineAddress;
     
     int numChildren;
     int numAdults;
@@ -165,5 +167,9 @@ public class Location {
     public boolean hasValidAddress() {
         //return !(this.houseNumber.matches("[^\\w\\d]+")) && !(this.streetName.matches("[^\\w\\d]+"));
         return true;
+    }
+    
+    public void setSafeAddress(String address) {
+        oneLineAddress = address;
     }
 }
