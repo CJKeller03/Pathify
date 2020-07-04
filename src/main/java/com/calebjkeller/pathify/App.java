@@ -5,7 +5,7 @@
  */
 package com.calebjkeller.pathify;
 
-import com.calebjkeller.locationHandling.*;
+import com.calebjkeller.pathify.locationHandling.Location;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;

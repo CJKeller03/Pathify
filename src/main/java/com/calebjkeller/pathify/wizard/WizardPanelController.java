@@ -40,7 +40,7 @@ public class WizardPanelController {
         this.generator = generator;
         this.generator.setModel(model);
         
-        this.next();
+        this.pullNextPage();
     }
     
     public void quit() {
@@ -48,13 +48,25 @@ public class WizardPanelController {
         frame.dispose();
     }
     
-    public void next() {
+    public void pullNextPage() {
+        
         if (curPage != null) {
             curPage.disable(model);
         }
+        
         curPage = generator.nextPage(this);
         curPage.enable();
+        panel.displayPage(curPage);
         
+    }
+    
+    public void  pushNextPage(WizardPageInterface page) {
+        if (curPage != null) {
+            curPage.disable(model);
+        }
+        
+        curPage = page;
+        curPage.enable();
         panel.displayPage(curPage);
     }
     

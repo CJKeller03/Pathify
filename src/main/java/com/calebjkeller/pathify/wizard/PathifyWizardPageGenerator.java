@@ -16,9 +16,13 @@
  */
 package com.calebjkeller.pathify.wizard;
 
+import com.calebjkeller.pathify.locationHandling.DeliveryList;
+import com.calebjkeller.pathify.locationHandling.Location;
+import com.calebjkeller.pathify.wizard.pages.AddressSelectWizardPage;
 import com.calebjkeller.pathify.wizard.pages.BaseWizardPage;
 import com.calebjkeller.pathify.wizard.pages.TitleWizardPage;
 import com.calebjkeller.pathify.wizard.pages.WizardPageInterface;
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -37,7 +41,24 @@ public class PathifyWizardPageGenerator implements WizardPageGeneratorInterface 
     public WizardPageInterface nextPage(WizardPanelController controller) {
         
         if (!model.hasObject("doGenerate")) {
+            System.out.println("serving title...");
             return new TitleWizardPage("title", controller);
+        }
+        
+        String[] arr = {"a", "b"};
+        String[] locArr = {"Joe", "Schmo", "100", "somewhere st", "1", "nowhere",
+                           "00000", "1234567890", "0", "0", "0", "1", "exists?"};
+        
+        
+        Location tmpLoc = new Location(locArr);
+        
+        System.out.println("serving select page...");
+        return new AddressSelectWizardPage("test", controller, arr, tmpLoc);
+        
+        DeliveryList list = new DeliveryList((File) model.getObject("csvFile"));
+        
+        if (! (Boolean) model.getObject("doGenerate")) {
+            
         }
         
         return new BaseWizardPage("none", controller);

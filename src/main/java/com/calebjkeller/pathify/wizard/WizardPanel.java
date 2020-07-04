@@ -121,12 +121,12 @@ public class WizardPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_finishButtonActionPerformed
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
-        controller.next();
+        controller.pullNextPage();
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void nextButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nextButtonKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            controller.next();
+            controller.pullNextPage();
         }
     }//GEN-LAST:event_nextButtonKeyPressed
 
@@ -136,6 +136,8 @@ public class WizardPanel extends javax.swing.JPanel {
         if (curPage != null) {
             this.pageArea.remove( (JPanel) curPage);
         }
+        
+        this.pageArea.remove( (JPanel) page);
         
         this.pageArea.add( (JPanel) page, page.getID());
         layout.show(this.pageArea, page.getID());

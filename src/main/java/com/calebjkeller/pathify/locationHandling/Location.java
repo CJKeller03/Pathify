@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.calebjkeller.locationHandling;
+package com.calebjkeller.pathify.locationHandling;
 
 import java.net.URL;
 import java.net.URLConnection;
@@ -32,11 +32,7 @@ public class Location {
     public String lastName;
     String phoneNumber;
     
-    public HashMap<String, String> inputAddressComponents = new HashMap<>();
-    public HashMap<String, String> verifiedAddressComponents = new HashMap<>();
-    
-    double latitude;
-    double longitude;
+    public HashMap address = new HashMap<String, String>();
     
     int numChildren;
     int numAdults;
@@ -72,19 +68,19 @@ public class Location {
                     this.lastName = table[i];
                     break;
                 case "House #":
-                    this.inputAddressComponents.put("houseNumber", table[i]);
+                    this.address.put("houseNumber", table[i]);
                     break;
                 case "Street":
-                    this.inputAddressComponents.put("streetName", table[i]);
+                    this.address.put("streetName", table[i]);
                     break;
                 case "Apt #         Lot #":
-                    this.inputAddressComponents.put("aptNumber", table[i]);
+                    this.address.put("aptNumber", table[i]);
                     break;
                 case "City":
-                    this.inputAddressComponents.put("cityName", table[i]);
+                    this.address.put("cityName", table[i]);
                     break;
                 case "Zip Code":
-                    this.inputAddressComponents.put("zipCode", table[i]);
+                    this.address.put("zipCode", table[i]);
                     break;
                 case "Phone #":
                     this.phoneNumber = table[i];
@@ -113,11 +109,11 @@ public class Location {
      */
     public String getUniqueAddress() {
         String out = "";
-        out += this.verifiedAddressComponents.get("houseNumber") + " ";
-        out += this.verifiedAddressComponents.get("streetName") + " ";
+        out += this.address.get("houseNumber") + " ";
+        out += this.address.get("streetName") + " ";
         
-        if (this.verifiedAddressComponents.containsKey("zipCode")) {
-            this.verifiedAddressComponents.get("zipCode");
+        if (this.address.containsKey("zipCode")) {
+            this.address.get("zipCode");
         }
         
         return out;
@@ -131,15 +127,15 @@ public class Location {
      */
     public String getCompleteAddress(){
         String out = "";
-        out += this.verifiedAddressComponents.get("houseNumber") + " ";
-        out += this.verifiedAddressComponents.get("streetName") + " ";
+        out += this.address.get("houseNumber") + " ";
+        out += this.address.get("streetName") + " ";
         
-        if (this.verifiedAddressComponents.containsKey("cityName")) {
-            out += this.verifiedAddressComponents.get("cityName") + " ";
+        if (this.address.containsKey("cityName")) {
+            out += this.address.get("cityName") + " ";
         }
         
-        if (this.verifiedAddressComponents.containsKey("zipCode")) {
-            this.verifiedAddressComponents.get("zipCode");
+        if (this.address.containsKey("zipCode")) {
+            this.address.get("zipCode");
         }
         
         return out;
