@@ -3,9 +3,32 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.calebjkeller</groupId>
     <artifactId>Pathify</artifactId>
-    <version>1.0</version>
+    <version>0.3</version>
     <packaging>jar</packaging>
+    <repositories>
+        <repository>
+            <id>arcgis</id> 
+            <url>https://esri.bintray.com/arcgis</url>
+        </repository>
+    </repositories>
     <dependencies>
+        <dependency>
+            <groupId>com.esri.arcgisruntime</groupId>
+            <artifactId>arcgis-java</artifactId>
+            <version>${arcgis.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.esri.arcgisruntime</groupId>
+            <artifactId>arcgis-java-jnilibs</artifactId>
+            <version>${arcgis.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>com.esri.arcgisruntime</groupId>
+            <artifactId>arcgis-java-resources</artifactId>
+            <version>${arcgis.version}</version>
+            <type>zip</type>
+        </dependency>
         <dependency>
             <groupId>com.google.ortools</groupId>
             <artifactId>ortools-java</artifactId>
@@ -36,5 +59,59 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>14</maven.compiler.source>
         <maven.compiler.target>14</maven.compiler.target>
+        <arcgis.version>100.8.0</arcgis.version>
     </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <artifactItems>
+                        <artifactItem>
+                            <groupId>com.esri.arcgisruntime</groupId>
+                            <artifactId>arcgis-java-jnilibs</artifactId>
+                            <version>${arcgis.version}</version>
+                            <type>zip</type>
+                            <overWrite>false</overWrite>
+                            <outputDirectory>${user.home}/.arcgis/${arcgis.version}</outputDirectory>
+                        </artifactItem>
+                        <artifactItem>
+                            <groupId>com.esri.arcgisruntime</groupId>
+                            <artifactId>arcgis-java-resources</artifactId>
+                            <version>${arcgis.version}</version>
+                            <type>zip</type>
+                            <overWrite>false</overWrite>
+                            <outputDirectory>${user.home}/.arcgis/${arcgis.version}</outputDirectory>
+                        </artifactItem>                        
+                    </artifactItems>
+                </configuration>
+            </plugin>
+            <plugin>
+              <artifactId>maven-assembly-plugin</artifactId>
+              <version>3.3.0</version>
+              <configuration>
+                <descriptorRefs>
+                  <descriptorRef>jar-with-dependencies</descriptorRef>
+                </descriptorRefs>
+                <archive>
+                    <manifest>
+                        <addClasspath>true</addClasspath>
+                        <mainClass>com.calebjkeller.pathify.App</mainClass>
+                    </manifest>
+                </archive>                
+              </configuration>
+              <executions>
+                <execution>
+                  <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                  <phase>package</phase> <!-- bind to the packaging phase -->
+                  <goals>
+                    <goal>single</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>            
+        </plugins>
+    </build>    
 </project>

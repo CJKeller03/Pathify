@@ -43,6 +43,8 @@ public class Tools {
      * @return The ArrayList of Location objects.
      * @throws IOException 
      */
+    
+    /*
     public static ArrayList<Location> importDeliveryList(File csvFile, JFrame frame) {
         
         // Create the line number reader (a simple bufferedreader could be used here).
@@ -174,7 +176,26 @@ public class Tools {
         }
         return locations;
     }
-    
+    */
+    public static HashMap<String, long[]> generateFakeDistanceMatrix(ArrayList<Location> locations) {  
+        
+        HashMap addressMatrix = new HashMap<String, long[]>();
+        
+        for (Location locA: locations) {
+            for (Location locB: locations) {
+                String key = locA.getCompleteAddress() + locB.getCompleteAddress();
+                
+                double xDist = locA.testPosition[0] - locB.testPosition[0];
+                double yDist = locA.testPosition[1] - locB.testPosition[1];
+                
+                long dist = Math.round(Math.sqrt(xDist*xDist + yDist*yDist)*10000);
+                long tmp[] = {dist, dist};
+                addressMatrix.put(key, tmp);
+            }
+        }
+        
+        return addressMatrix;
+    }    
     /**
      * Generate a HashMap linking origin - destination pairs to the distance
      * and approximate amount of time between them from a list of Location objects.
@@ -187,7 +208,7 @@ public class Tools {
      * @param locations An ArrayList of location objects
      * @return A HashMap representing the distance/time between different addresses.
      */
-    public static HashMap<String, Long[]> generateDistanceMatrix(ArrayList<Location> locations) {
+    public static HashMap<String, long[]> generateDistanceMatrix(ArrayList<Location> locations) {
         
         // Read the API key to be used from a file
         String key;
@@ -202,15 +223,11 @@ public class Tools {
         // once, it is ignored (in the case of apartment buildings or similar).
         // If a Location's address is invalid, skip it and print a warning to the console.
         ArrayList<String> addresses = new ArrayList<String>();
+        
         for (Location loc : locations) {
-            if (loc.hasValidAddress()) {
-                String thisAddress = loc.getCompleteAddress();
-                if (!addresses.contains(thisAddress)) {
-                    addresses.add(loc.getUniqueAddress());
-                }
-            } else {
-                System.out.println("WARNING! Location with invalid address:");
-                System.out.println(loc.toString());
+            String thisAddress = loc.getCompleteAddress();
+            if (!addresses.contains(thisAddress)) {
+                addresses.add(thisAddress);
             }
         }
         
@@ -219,7 +236,7 @@ public class Tools {
         String charset = java.nio.charset.StandardCharsets.UTF_8.name();
         String parameterFormat = "origins=%s&destinations=%s&key=%s";
         
-        HashMap<String, Long[]> addressMatrix = new HashMap<String, Long[]>();
+        HashMap<String, long[]> addressMatrix = new HashMap<String, long[]>();
         
         for (int i = 0; i < addresses.size(); i++) {
             
@@ -281,7 +298,7 @@ public class Tools {
                     return null;
                 }
 
-                addressMatrix.putAll(getDistanceMatrixFromJSON(response));
+                addressMatrix.putAll(getDistanceMatrixFromJSON(response, origin, destinationList));
                 
             }
         }
@@ -296,7 +313,7 @@ public class Tools {
      * @param filename The name (and possibly location) of the JSON file.
      * @return A HashMap representing the distance/time between different addresses.
      */
-    public static HashMap<String, Long[]> getDistanceMatrixFromFile(String filename) {
+    public static HashMap<String, long[]> getDistanceMatrixFromFile(String filename) {
         
         Scanner fReader;
         
@@ -324,7 +341,7 @@ public class Tools {
      * @param JSONString A String representing a JSON object.
      * @return A HashMap representing the distance/time between different addresses.
      */
-    public static HashMap<String, Long[]> getDistanceMatrixFromJSON(String JSONString) {
+    public static HashMap<String, long[]> getDistanceMatrixFromJSON(String JSONString, String origin, ArrayList<String> inputDestinations) {
         
         JSONObject data;
         
@@ -340,7 +357,7 @@ public class Tools {
             return null;
         }
         
-        HashMap<String, Long[]> addressMatrix = new HashMap<String, Long[]>();
+        HashMap<String, long[]> addressMatrix = new HashMap<String, long[]>();
         
         // Get the origin and destination addresses encoded in this object.
         JSONArray origins = (JSONArray) data.get("origin_addresses");
@@ -368,8 +385,9 @@ public class Tools {
                 
                 // Generate the key by concatenating the origin and destination
                 // addresses together, and add the data to the HashMap.
-                Long[] tmp = {distance, duration};
-                addressMatrix.put((String) origins.get(i) + (String) destinations.get(j), tmp);
+                long[] tmp = {distance, duration};
+                //addressMatrix.put((String) origins.get(i) + (String) destinations.get(j), tmp);
+                addressMatrix.put(origin + inputDestinations.get(j), tmp);
                 
             }
             

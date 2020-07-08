@@ -28,6 +28,8 @@ public class Location {
                                             "City", "Zip Code", "Phone #", "Kids",
                                             "Adults", "Seniors", "Total", "Notes:"};
     
+    public int[] testPosition = new int[2];
+    
     public String firstName;
     public String lastName;
     String phoneNumber;
@@ -40,6 +42,8 @@ public class Location {
     int numAdults;
     int numSeniors;
     
+    int boxDemand = 1;
+    
     String notes;
     
     public Location(String[] table) {
@@ -48,6 +52,11 @@ public class Location {
     
     public Location(String[] table, String[] header) {
         this.overwriteDataFromTable(table, header);
+    }
+    
+    public void setPosition(int x, int y) {
+        this.testPosition[0] = x;
+        this.testPosition[1] = y;
     }
     
     /**
@@ -171,5 +180,13 @@ public class Location {
     
     public void setSafeAddress(String address) {
         oneLineAddress = address;
+    }
+    
+    public void setDemand(int demand) {
+        this.boxDemand = demand;
+    }
+    
+    public int getDemand() {
+        return this.boxDemand;
     }
 }

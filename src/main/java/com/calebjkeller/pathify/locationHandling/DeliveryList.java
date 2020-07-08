@@ -75,6 +75,10 @@ public class DeliveryList {
         
     }
     
+    public int getSize() {
+        return locations.size();
+    }
+    
     
     
 }

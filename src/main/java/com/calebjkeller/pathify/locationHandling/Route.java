@@ -5,6 +5,11 @@
  */
 package com.calebjkeller.pathify.locationHandling;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import java.awt.image.BufferedImage;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -15,9 +20,9 @@ import java.util.ArrayList;
 public class Route {
     ArrayList<Location> locations;
     
-    int totalDistance;
+    long totalDistance;
     int approximateTime;
-    int numBoxes;
+    long numBoxes;
     
     public Route() {
         this.locations = new ArrayList<Location>();
@@ -37,7 +42,13 @@ public class Route {
         this.locations.add(loc);
     }
     
-    public void setDistance(int dist) {
+    public void addLocations(ArrayList<Location> locations) {
+        for (Location loc: locations) {
+            this.locations.add(loc);
+        }
+    }
+    
+    public void setDistance(long dist) {
         this.totalDistance = dist;
     }
     
@@ -45,8 +56,82 @@ public class Route {
         this.approximateTime = time;
     }
     
-    public void setNumBoxes(int numBoxes) {
+    public void setNumBoxes(long numBoxes) {
         this.numBoxes = numBoxes;
+    }
+    
+    public String toString() {
+        String out = "";
+        for (Location loc: this.locations) {
+            out += loc.firstName + " ";
+            out += loc.lastName + " -> ";
+            //out += loc.testPosition[0] + " " + loc.testPosition[1] + " ), ";
+        }
+        out += "\n";
+        out += "Total distance: " + this.totalDistance;
+        
+        return out;
+    }
+    
+    public String[][] getAsTable() {
+        
+        String[][] out = new String[this.locations.size()][3];
+        
+        int i = 0;
+        for (Location loc: this.locations) {
+            out[i][0] = loc.firstName + " " + loc.lastName;
+            out[i][1] = loc.getUniqueAddress();
+            out[i][2] = loc.phoneNumber;
+            i++;
+        }
+        
+        return out;
+    }
+    
+    public BufferedImage getQRCode(int width, int height) {
+        String url = "https://www.google.com/maps/dir/?api=1&origin=%s&waypoints=%s&destination=%s";
+        String charset = java.nio.charset.StandardCharsets.UTF_8.name();
+        
+        ArrayList<String> addresses = new ArrayList<String>();
+        for (Location loc: this.locations) {
+            addresses.add(loc.getCompleteAddress());
+        }
+        
+        String waypoints = String.join("|", addresses.subList(1, addresses.size() - 1));
+        
+        try {
+            url = String.format(url,
+                                URLEncoder.encode(addresses.get(0), charset),
+                                URLEncoder.encode(waypoints, charset),
+                                URLEncoder.encode(addresses.get(addresses.size() - 1), charset));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
+        
+        QRCodeWriter writer = new QRCodeWriter();
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB); // create an empty image
+        
+        int white = 255 << 16 | 255 << 8 | 255;
+        int black = 0;
+        
+        BitMatrix bitMatrix;
+        
+        try {
+            bitMatrix = writer.encode(url, BarcodeFormat.QR_CODE, width, height);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                image.setRGB(i, j, bitMatrix.get(i, j) ? black : white); // set pixel one by one
+            }
+        }
+        
+        return image;
     }
     
 }

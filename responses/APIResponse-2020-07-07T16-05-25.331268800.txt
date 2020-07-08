@@ -1,0 +1,60 @@
+{
+   "destination_addresses" : [
+      "600 Woodland Rd, Mansfield, OH 44906, USA",
+      "290 1st Ave, Mansfield, OH 44902, USA",
+      "328 6th Ave, Mansfield, OH 44905, USA",
+      "223 7th Ave, Mansfield, OH 44905, USA"
+   ],
+   "origin_addresses" : [ "2444 Lexington Ave, Mansfield, OH 44907, USA" ],
+   "rows" : [
+      {
+         "elements" : [
+            {
+               "distance" : {
+                  "text" : "6.0 km",
+                  "value" : 5960
+               },
+               "duration" : {
+                  "text" : "8 mins",
+                  "value" : 457
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "9.8 km",
+                  "value" : 9835
+               },
+               "duration" : {
+                  "text" : "14 mins",
+                  "value" : 866
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "10.3 km",
+                  "value" : 10316
+               },
+               "duration" : {
+                  "text" : "15 mins",
+                  "value" : 906
+               },
+               "status" : "OK"
+            },
+            {
+               "distance" : {
+                  "text" : "10.1 km",
+                  "value" : 10061
+               },
+               "duration" : {
+                  "text" : "15 mins",
+                  "value" : 893
+               },
+               "status" : "OK"
+            }
+         ]
+      }
+   ],
+   "status" : "OK"
+}

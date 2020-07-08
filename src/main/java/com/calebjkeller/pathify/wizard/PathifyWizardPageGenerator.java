@@ -16,14 +16,21 @@
  */
 package com.calebjkeller.pathify.wizard;
 
+import com.calebjkeller.pathify.RouteSolver;
+import com.calebjkeller.pathify.SolverDataModel;
+import com.calebjkeller.pathify.Tools;
 import com.calebjkeller.pathify.locationHandling.DeliveryList;
 import com.calebjkeller.pathify.locationHandling.Location;
+import com.calebjkeller.pathify.locationHandling.Route;
 import com.calebjkeller.pathify.wizard.pages.AddressSelectWizardPage;
 import com.calebjkeller.pathify.wizard.pages.BaseWizardPage;
+import com.calebjkeller.pathify.wizard.pages.LoadingWizardPage;
+import com.calebjkeller.pathify.wizard.pages.RouteDisplayPage;
 import com.calebjkeller.pathify.wizard.pages.TitleWizardPage;
 import com.calebjkeller.pathify.wizard.pages.WizardPageInterface;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -38,7 +45,7 @@ public class PathifyWizardPageGenerator implements WizardPageGeneratorInterface 
     
     private String state = "start";
     
-    
+    private boolean enabled = true;
     private int curLocation;
     
     public PathifyWizardPageGenerator() {
@@ -47,7 +54,7 @@ public class PathifyWizardPageGenerator implements WizardPageGeneratorInterface 
     
     public WizardPageInterface nextPage(WizardPanelController controller) {
         
-        while (true) {
+        while (enabled) {
             switch (state) {
                 case "start":
                     
@@ -74,14 +81,57 @@ public class PathifyWizardPageGenerator implements WizardPageGeneratorInterface 
                         }
                         curLocation++;
                     }
-
-                    return new AddressSelectWizardPage("select", controller, list.getLocation(curLocation));
-
+                    
+                    if (curLocation == list.getSize()) {
+                        
+                        if (model.hasObject("skippedAddresses")) {
+                            state = "generateSkipped";
+                        } else {
+                            state = "generateRoutes";
+                        }
+                        
+                    } else {
+                        return new AddressSelectWizardPage("select", controller, list.getLocation(curLocation)); 
+                    }
+                    
+                    break;
+                    
+                case "generateSkipped":
+                    enabled = false;
+                    
+                    break;
+                    
+                case "generateRoutes":
+                    controller.pushNextPage(new LoadingWizardPage("loading", controller));
+                    
+                    
+                    int n = 0;
+                    for (Location loc: (ArrayList<Location>) list.getLocations()) {
+                        loc.testPosition[0] = n % 3;
+                        loc.testPosition[1] = n / 3;
+                        n+=1;
+                    }
+                    
+                    
+                    //HashMap<String, long[]> costMatrix = Tools.generateDistanceMatrix(list.getLocations());
+                    HashMap costMatrix = Tools.generateFakeDistanceMatrix(list.getLocations());
+                    
+                    int[] tmpVehicles = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10};
+                    SolverDataModel dataModel = new SolverDataModel(costMatrix, list.getLocations(), tmpVehicles);
+                    ArrayList<Route> routes = RouteSolver.solve(dataModel);
+                    
+                    for (Route route: routes) {
+                        System.out.println("Next route:");
+                        System.out.println(route.toString());
+                    }
+                    
+                    enabled = false;
+                    return new RouteDisplayPage("display", controller, routes.get(0));
             }
         }
         
         
-        //return new BaseWizardPage("none", controller);
+        return new BaseWizardPage("none", controller);
         
     }
     

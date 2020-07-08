@@ -65,6 +65,11 @@ public class AddressSelectWizardPage extends javax.swing.JPanel implements Wizar
         controller.setNext(false);
         controller.setQuit(true);
         System.out.println("select page started!");
+        
+        // SKIPS PAGE AUTOMATICALLY - REMOVE FROM HERE
+        addressSelectBox.setSelectedIndex(0);
+        controller.pullNextPage();
+        // TO HERE
     }
     
     public void disable(WizardModel model) {
@@ -72,14 +77,15 @@ public class AddressSelectWizardPage extends javax.swing.JPanel implements Wizar
             model.setObject("selectedAddress", addressSelectBox.getSelectedValue());
         } else {
             ArrayList skippedAddresses;
+            
             if (!model.hasObject("skippedAddresses")) {
-                skippedAddresses = new ArrayList<String>();
+                skippedAddresses = new ArrayList<Location>();
                 model.setObject("skippedAddresses", skippedAddresses);
             } else {
                 skippedAddresses = (ArrayList) model.getObject("skippedAddresses");
             }
             
-            skippedAddresses.add(addressSelectBox.getSelectedValue());
+            skippedAddresses.add(loc);
         }
     }
     
@@ -110,6 +116,7 @@ public class AddressSelectWizardPage extends javax.swing.JPanel implements Wizar
         description.setText(String.format(this.descriptionText, loc.firstName + " " + loc.lastName, loc.getUniqueAddress()));
 
         skipButton.setText("Skip");
+        skipButton.setEnabled(false);
         skipButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 skipButtonActionPerformed(evt);
