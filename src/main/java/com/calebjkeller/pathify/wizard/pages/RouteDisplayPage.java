@@ -16,20 +16,29 @@
  */
 package com.calebjkeller.pathify.wizard.pages;
 
-import com.esri.arcgisruntime.mapping.*;
 
 import com.calebjkeller.pathify.locationHandling.Route;
 import com.calebjkeller.pathify.wizard.WizardModel;
 import com.calebjkeller.pathify.wizard.WizardPanelController;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 
 /**
  *
  * @author Caleb Keller
  */
-public class RouteDisplayPage extends javax.swing.JPanel implements WizardPageInterface {
+public class RouteDisplayPage extends javax.swing.JPanel implements WizardPageInterface, Printable {
     
-    
+    private int routeNumber;
     private String ID;
     private WizardPanelController controller;
     
@@ -41,11 +50,11 @@ public class RouteDisplayPage extends javax.swing.JPanel implements WizardPageIn
      * Creates new form WizardPage
      */
     public RouteDisplayPage(String ID, WizardPanelController controller,
-                            Route route) {
+                            Route route, int routeNumber) {
+        this.routeNumber = routeNumber;
         this.route = route;
         this.ID = ID;
         this.controller = controller;
-
         initComponents();
     }
     
@@ -62,7 +71,74 @@ public class RouteDisplayPage extends javax.swing.JPanel implements WizardPageIn
     public void disable(WizardModel model) {
         
     }
+    
+    public int print(Graphics g, PageFormat pf, int pageNumber) throws PrinterException {
+        JFrame dummyFrame = new JFrame();
 
+        Component comp = this;
+
+        // Get the preferred size ofthe component...
+        Dimension compSize = comp.getPreferredSize();
+        // Make sure we size to the preferred size
+        comp.setSize(compSize);
+        // Get the the print size
+        Dimension printSize = new Dimension();
+        printSize.setSize(pf.getImageableWidth(), pf.getImageableHeight());
+
+        // Calculate the scale factor
+        double scaleFactor = 1d;
+
+        if (compSize != null && printSize != null) {
+            double dScaleWidth = (double) printSize.width / (double) compSize.width;
+            double dScaleHeight = (double) printSize.height / (double) compSize.height;
+
+            scaleFactor = Math.min(dScaleHeight, dScaleWidth);
+        }
+
+        // Don't want to scale up, only want to scale down
+        if (scaleFactor > 1d) {
+            scaleFactor = 1d;
+        }
+
+        // Calcaulte the scaled size...
+        double scaleWidth = compSize.width * scaleFactor;
+        double scaleHeight = compSize.height * scaleFactor;
+
+        // Create a clone of the graphics context.  This allows us to manipulate
+        // the graphics context without begin worried about what effects
+        // it might have once we're finished
+        Graphics2D g2 = (Graphics2D) g.create();
+        // Calculate the x/y position of the component, this will center
+        // the result on the page if it can
+        double x = ((pf.getImageableWidth() - scaleWidth) / 2d) + pf.getImageableX();
+        double y = ((pf.getImageableHeight() - scaleHeight) / 2d) + pf.getImageableY();
+        
+        // Create a new AffineTransformation
+        AffineTransform at = new AffineTransform();
+        
+        // Translate the offset to out "center" of page
+        at.translate(x, y);
+        
+        // Set the scaling
+        at.scale(scaleFactor, scaleFactor);
+        
+        // Apply the transformation
+        g2.transform(at);
+        
+        // Print the component
+        dummyFrame.add(this);
+        dummyFrame.pack();
+        comp.print(g2);
+        
+        // Dispose of the graphics context, freeing up memory and discarding
+        // our changes
+        g2.dispose();
+        dummyFrame.dispose();
+
+        comp.revalidate();
+        return Printable.PAGE_EXISTS;
+      }    
+       
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -72,13 +148,13 @@ public class RouteDisplayPage extends javax.swing.JPanel implements WizardPageIn
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         jScrollPane1 = new javax.swing.JScrollPane();
         addressTable = new javax.swing.JTable();
         qrCode = new javax.swing.JLabel();
         infoBox = new javax.swing.JLabel();
-        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(15, 0));
+        mapPanel = new javax.swing.JPanel();
 
+        setForeground(new java.awt.Color(255, 255, 255));
         setMinimumSize(new java.awt.Dimension(1050, 800));
         setPreferredSize(new java.awt.Dimension(1050, 800));
 
@@ -88,14 +164,14 @@ public class RouteDisplayPage extends javax.swing.JPanel implements WizardPageIn
         addressTable.setModel(new javax.swing.table.DefaultTableModel(
             this.route.getAsTable(),
             new String [] {
-                "Name", "Address", "Phone Number"
+                "Name", "Address", "Phone Number", " Notes"
             })
             {
                 Class[] types = new Class [] {
-                    java.lang.String.class, java.lang.String.class, java.lang.String.class
+                    java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
                 };
                 boolean[] canEdit = new boolean [] {
-                    false, false, false
+                    false, false, false, false
                 };
 
                 public Class getColumnClass(int columnIndex) {
@@ -106,7 +182,7 @@ public class RouteDisplayPage extends javax.swing.JPanel implements WizardPageIn
                     return canEdit [columnIndex];
                 }
             });
-            addressTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+            addressTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
             addressTable.setFillsViewportHeight(true);
             addressTable.setRowHeight(35);
             addressTable.setRowSelectionAllowed(false);
@@ -122,35 +198,48 @@ public class RouteDisplayPage extends javax.swing.JPanel implements WizardPageIn
             qrCode.setMinimumSize(new java.awt.Dimension(300, 300));
             qrCode.setPreferredSize(new java.awt.Dimension(300, 300));
 
+            infoBox.setText(String.format("<html> <h2>Route %s</h2> Total distance (miles): %s\nApproximate travel time: %s </html>",
+                this.routeNumber, this.route.getDistance(), this.route.getTime()
+            ));
+
+            javax.swing.GroupLayout mapPanelLayout = new javax.swing.GroupLayout(mapPanel);
+            mapPanel.setLayout(mapPanelLayout);
+            mapPanelLayout.setHorizontalGroup(
+                mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(0, 726, Short.MAX_VALUE)
+            );
+            mapPanelLayout.setVerticalGroup(
+                mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(0, 0, Short.MAX_VALUE)
+            );
+
             javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
             this.setLayout(layout);
             layout.setHorizontalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(infoBox, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addComponent(qrCode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(filler2, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap())
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane1)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(mapPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(qrCode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(infoBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addContainerGap())))
             );
             layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap()
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 794, Short.MAX_VALUE)
                         .addGroup(layout.createSequentialGroup()
-                            .addGap(0, 0, Short.MAX_VALUE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(qrCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(infoBox, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(filler2, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(infoBox, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(qrCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(mapPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addContainerGap())
             );
         }// </editor-fold>//GEN-END:initComponents
@@ -158,10 +247,9 @@ public class RouteDisplayPage extends javax.swing.JPanel implements WizardPageIn
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable addressTable;
-    private javax.swing.Box.Filler filler1;
-    private javax.swing.Box.Filler filler2;
     private javax.swing.JLabel infoBox;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel mapPanel;
     private javax.swing.JLabel qrCode;
     // End of variables declaration//GEN-END:variables
 }

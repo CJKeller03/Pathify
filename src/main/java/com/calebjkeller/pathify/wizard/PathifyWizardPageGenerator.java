@@ -28,9 +28,14 @@ import com.calebjkeller.pathify.wizard.pages.LoadingWizardPage;
 import com.calebjkeller.pathify.wizard.pages.RouteDisplayPage;
 import com.calebjkeller.pathify.wizard.pages.TitleWizardPage;
 import com.calebjkeller.pathify.wizard.pages.WizardPageInterface;
+import java.awt.print.Book;
+import java.awt.print.PageFormat;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.swing.JFrame;
 
 /**
  *
@@ -63,6 +68,8 @@ public class PathifyWizardPageGenerator implements WizardPageGeneratorInterface 
                     
                 case "started":
                     list = new DeliveryList((File) model.getObject("csvFile"));
+                    
+                    System.out.println(list.getLocations().size());
                     
                     if ((Boolean) model.getObject("doGenerate")) {
                         state = "generateAddresses";
@@ -116,7 +123,7 @@ public class PathifyWizardPageGenerator implements WizardPageGeneratorInterface 
                     //HashMap<String, long[]> costMatrix = Tools.generateDistanceMatrix(list.getLocations());
                     HashMap costMatrix = Tools.generateFakeDistanceMatrix(list.getLocations());
                     
-                    int[] tmpVehicles = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10};
+                    int[] tmpVehicles = {0, 1, 0, 2, 1};
                     SolverDataModel dataModel = new SolverDataModel(costMatrix, list.getLocations(), tmpVehicles);
                     ArrayList<Route> routes = RouteSolver.solve(dataModel);
                     
@@ -125,8 +132,34 @@ public class PathifyWizardPageGenerator implements WizardPageGeneratorInterface 
                         System.out.println(route.toString());
                     }
                     
+                    Book routePages = new Book();
+                    
+                    PrinterJob pj = PrinterJob.getPrinterJob();
+                    pj.setJobName(" Print Component ");
+
+                    PageFormat pf = pj.defaultPage();
+                    pf.setOrientation(PageFormat.LANDSCAPE);
+                    pj.pageDialog(pf);
+
+                    
+                    for (int i = 0; i < routes.size(); i++) {
+                        RouteDisplayPage page = new RouteDisplayPage("display", controller, routes.get(i), i);
+                        routePages.append(page, pf);
+                    }  
+                    
+                    pj.setPageable(routePages);
+                    
+                    if (pj.printDialog() == true) {
+                        try {
+                              pj.print();
+                        } catch (PrinterException ex) {
+                              // handle exception
+                        }        
+
+                    }
+                    
                     enabled = false;
-                    return new RouteDisplayPage("display", controller, routes.get(0));
+                    break;
             }
         }
         

@@ -52,8 +52,16 @@ public class Route {
         this.totalDistance = dist;
     }
     
+    public long getDistance() {
+        return this.totalDistance;
+    }
+    
     public void setTime(int time) {
         this.approximateTime = time;
+    }
+    
+    public long getTime() {
+        return 0l;
     }
     
     public void setNumBoxes(long numBoxes) {
@@ -65,7 +73,7 @@ public class Route {
         for (Location loc: this.locations) {
             out += loc.firstName + " ";
             out += loc.lastName + " -> ";
-            //out += loc.testPosition[0] + " " + loc.testPosition[1] + " ), ";
+            out += loc.testPosition[0] + " " + loc.testPosition[1] + " ), ";
         }
         out += "\n";
         out += "Total distance: " + this.totalDistance;
@@ -75,13 +83,14 @@ public class Route {
     
     public String[][] getAsTable() {
         
-        String[][] out = new String[this.locations.size()][3];
+        String[][] out = new String[this.locations.size()][4];
         
         int i = 0;
         for (Location loc: this.locations) {
             out[i][0] = loc.firstName + " " + loc.lastName;
             out[i][1] = loc.getUniqueAddress();
             out[i][2] = loc.phoneNumber;
+            out[i][3] = loc.notes;
             i++;
         }
         

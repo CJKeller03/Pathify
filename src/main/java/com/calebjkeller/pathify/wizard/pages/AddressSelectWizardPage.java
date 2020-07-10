@@ -67,8 +67,10 @@ public class AddressSelectWizardPage extends javax.swing.JPanel implements Wizar
         System.out.println("select page started!");
         
         // SKIPS PAGE AUTOMATICALLY - REMOVE FROM HERE
+        
         addressSelectBox.setSelectedIndex(0);
         controller.pullNextPage();
+        
         // TO HERE
     }
     
