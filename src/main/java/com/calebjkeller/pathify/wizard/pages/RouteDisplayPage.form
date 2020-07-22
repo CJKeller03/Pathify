@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <NonVisualComponents>
+    <Component class="javax.swing.Box$Filler" name="filler1">
+      <Properties>
+        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[0, 32767]"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="classDetails" type="java.lang.String" value="Box.Filler.VerticalGlue"/>
+      </AuxValues>
+    </Component>
+  </NonVisualComponents>
   <Properties>
+    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+      <Color blue="ff" green="ff" red="ff" type="rgb"/>
+    </Property>
     <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
       <Color blue="ff" green="ff" red="ff" type="rgb"/>
     </Property>
     <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[1050, 800]"/>
+      <Dimension value="[1320, 1020]"/>
     </Property>
     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[1050, 800]"/>
+      <Dimension value="[1320, 1020]"/>
     </Property>
   </Properties>
   <AuxValues>
@@ -32,13 +47,19 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jScrollPane1" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
-                      <Component id="mapPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="qrCode" max="32767" attributes="0"/>
-                          <Component id="infoBox" max="32767" attributes="0"/>
+                      <Component id="mapDisplay" min="-2" pref="881" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="mapquestLabel" alignment="0" max="32767" attributes="0"/>
+                              <Component id="googleMapsLabel" alignment="0" max="32767" attributes="0"/>
+                              <Component id="googleQRCode" alignment="0" max="32767" attributes="0"/>
+                          </Group>
+                          <Component id="mapquestQRCode" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
+                      <Component id="infoBox" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="-4" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -47,15 +68,20 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
+              <Component id="jScrollPane1" pref="550" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="infoBox" pref="80" max="32767" attributes="0"/>
+                      <Component id="googleMapsLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="qrCode" min="-2" max="-2" attributes="0"/>
+                      <Component id="googleQRCode" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="mapquestLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="mapquestQRCode" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="mapPanel" max="32767" attributes="0"/>
+                  <Component id="mapDisplay" max="32767" attributes="0"/>
+                  <Component id="infoBox" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -78,12 +104,12 @@
         <Component class="javax.swing.JTable" name="addressTable">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Arial" size="18" style="0"/>
+              <Font name="Arial" size="14" style="0"/>
             </Property>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    this.route.getAsTable(),&#xa;    new String [] {&#xa;        &quot;Name&quot;, &quot;Address&quot;, &quot;Phone Number&quot;, &quot; Notes&quot;&#xa;    })&#xa;    {&#xa;        Class[] types = new Class [] {&#xa;            java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class&#xa;        };&#xa;        boolean[] canEdit = new boolean [] {&#xa;            false, false, false, false&#xa;        };&#xa;&#xa;        public Class getColumnClass(int columnIndex) {&#xa;            return types [columnIndex];&#xa;        }&#xa;&#xa;        public boolean isCellEditable(int rowIndex, int columnIndex) {&#xa;            return canEdit [columnIndex];&#xa;        }&#xa;    }" type="code"/>
             </Property>
-            <Property name="autoResizeMode" type="int" value="4"/>
+            <Property name="autoResizeMode" type="int" value="3"/>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
               <TableColumnModel selectionModel="0"/>
             </Property>
@@ -102,40 +128,101 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JLabel" name="qrCode">
+    <Component class="javax.swing.JLabel" name="googleQRCode">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="new ImageIcon(this.route.getQRCode(300, 300))&#xd;&#xa;" type="code"/>
+          <Connection code="new ImageIcon(this.route.getGoogleMapsQRCode(200, 200))&#xa;    " type="code"/>
+        </Property>
+        <Property name="horizontalTextPosition" type="int" value="0"/>
+        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[200, 200]"/>
         </Property>
         <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[300, 300]"/>
+          <Dimension value="[200, 200]"/>
         </Property>
         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[300, 300]"/>
+          <Dimension value="[200, 200]"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="infoBox">
       <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="cc" green="cc" red="cc" type="rgb"/>
+        </Property>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="0" green="0" red="0" type="rgb"/>
+        </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="String.format(&quot;&lt;html&gt; &lt;h2&gt;Route %s&lt;/h2&gt; Total distance (miles): %s\nApproximate travel time: %s &lt;/html&gt;&quot;,&#xa;    this.routeNumber, this.route.getDistance(), this.route.getTime()&#xa;)" type="code"/>
+          <Connection code="String.format(&#xa;    &quot;&lt;html&gt; &lt;h1&gt;Route %s&lt;/h1&gt;&quot;&#xa;    + &quot;Total distance (miles): %s&lt;br&gt;&quot;&#xa;    + &quot;Approximate travel time: %s&lt;br&gt;&quot;&#xa;    + &quot;Total boxes to deliver: %s&lt;br&gt;&quot;&#xa;    + &quot;Scan upper QR code for google maps route (max 11 destinations)&lt;br&gt;&quot;&#xa;    + &quot;Scan lower QR code for mapquest route (displays all destinations)&lt;br&gt;&quot;&#xa;    + &quot;&lt;h2&gt;Please Report Errors&lt;/h2&gt;&quot;&#xa;    + &quot;If there is an error with this page, please send a picture of this page and a description of the error to pathify@gmail.com. Thanks!&quot;&#xa;    + &quot;&lt;h3&gt;Pathify V0.3 - July 2020&lt;/h3&gt;&quot;&#xa;    + &quot;Designed by Caleb Keller&quot;&#xa;    + &quot;&lt;/html&gt;&quot;,&#xa;    this.routeNumber, this.route.getDistance(), this.route.getTime(), this.route.getNumBoxes()&#xa;)" type="code"/>
+        </Property>
+        <Property name="verticalAlignment" type="int" value="1"/>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[225, 50]"/>
+        </Property>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[225, 16]"/>
         </Property>
       </Properties>
     </Component>
-    <Container class="javax.swing.JPanel" name="mapPanel">
-
-      <Layout>
-        <DimensionLayout dim="0">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="726" max="32767" attributes="0"/>
-          </Group>
-        </DimensionLayout>
-        <DimensionLayout dim="1">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-          </Group>
-        </DimensionLayout>
-      </Layout>
-    </Container>
+    <Component class="javax.swing.JLabel" name="mapquestQRCode">
+      <Properties>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new ImageIcon(this.route.getMapquestQRCode(200, 200))&#xa;    " type="code"/>
+        </Property>
+        <Property name="horizontalTextPosition" type="int" value="0"/>
+        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[200, 200]"/>
+        </Property>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[200, 200]"/>
+        </Property>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[200, 200]"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="mapDisplay">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="mapDisplay.setIcon(MapGenerator.createMap());"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="googleMapsLabel">
+      <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="ff" green="ff" red="ff" type="rgb"/>
+        </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Segoe UI" size="14" style="0"/>
+        </Property>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="33" green="33" red="33" type="rgb"/>
+        </Property>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="googleQRCode"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Open in Google Maps"/>
+        <Property name="toolTipText" type="java.lang.String" value=""/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="mapquestLabel">
+      <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="ff" green="ff" red="ff" type="rgb"/>
+        </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Segoe UI" size="14" style="0"/>
+        </Property>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="33" green="33" red="33" type="rgb"/>
+        </Property>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="mapquestQRCode"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Open in Mapquest"/>
+      </Properties>
+    </Component>
   </SubComponents>
 </Form>

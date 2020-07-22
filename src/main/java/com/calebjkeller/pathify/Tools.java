@@ -44,139 +44,6 @@ public class Tools {
      * @throws IOException 
      */
     
-    /*
-    public static ArrayList<Location> importDeliveryList(File csvFile, JFrame frame) {
-        
-        // Create the line number reader (a simple bufferedreader could be used here).
-        System.out.println("Started");
-        
-        ArrayList<Location> locations = new ArrayList<Location>();
-        
-        try {
-            FileReader fReader = new FileReader(csvFile);
-            LineNumberReader lnr = new LineNumberReader(fReader);
-            
-            // Remove all characters that shouldn't be present in the file.
-            // This is necessary because for some reason, the first line of the .csv
-            // file contains some garbage at the beginning, which messes up the 
-            // code that interprets the header to put the data in the correct place.
-
-            String headerAsString = lnr.readLine().replaceAll("[^ ,#:()a-zA-Z0-9]", "");
-            String[] header = headerAsString.split(",");
-
-            String line;
-            while ((line = lnr.readLine()) != null) {
-                System.out.println(line);
-                
-                Location curLocation = new Location(line.replaceAll("[^ ,#:()a-zA-Z0-9]", "").split(","), header);
-                String[] arcGISCandidates = getArcGISCandidates(curLocation);
-
-                boolean foundRealAddress = false;
-                String inputStreetAddress = curLocation.inputAddressComponents.get("houseNumber") + " " +
-                                            curLocation.inputAddressComponents.get("streetName");
-                inputStreetAddress = inputStreetAddress.toLowerCase();
-                
-                String inputCityName = curLocation.inputAddressComponents.get("cityName");
-                inputCityName = inputCityName.toLowerCase();
-                
-                String inputZipCode = curLocation.inputAddressComponents.get("zipCode");
-                
-                
-                while (!foundRealAddress) {
-                    for (String address : arcGISCandidates) {
-                        String[] splitAddress = address.split(",");
-                        //System.out.println(realStreetAddress + " : " + inputStreetAddress);
-                        
-                        
-
-                        if (splitAddress[0].toLowerCase().equals(inputStreetAddress) &&
-                            splitAddress[1].toLowerCase().replace(" ", "").equals(inputCityName) &&
-                            splitAddress[3].replace(" ", "").equals(inputZipCode)) {
-
-                            foundRealAddress = true;
-
-                            curLocation.verifiedAddressComponents.put("streetAddress", splitAddress[0]);
-                            curLocation.verifiedAddressComponents.put("cityName", splitAddress[1]);
-                            curLocation.verifiedAddressComponents.put("state", splitAddress[2]);
-                            curLocation.verifiedAddressComponents.put("zipCode", splitAddress[3]);
-                            break;
-                        }
-
-                    }
-
-                    if (!foundRealAddress) {
-                        String[] options = java.util.Arrays.copyOf(arcGISCandidates, arcGISCandidates.length+1);
-                        options[options.length - 1] = "None of the above";
-                        System.out.println(curLocation.getCompleteAddress());
-                        String userInput = ListDialog.showDialog(frame,
-                                              null,
-                                              "The address: " + inputStreetAddress + " " +
-                                                      curLocation.inputAddressComponents.get("cityName") + " " +
-                                                      curLocation.inputAddressComponents.get("zipCode") + " " +
-                                                      " could not be found.\n Please select"
-                                                      + " the correct address from the list"
-                                                      + " below.",
-                                              "Verify address",
-                                              options,
-                                              "None of the above",
-                                              "                                        ");
-
-                        if (!userInput.equals("None of the above") &&
-                                !userInput.equals("Stop")) {
-
-                            String[] splitAddress = userInput.split(",");
-                            curLocation.verifiedAddressComponents.put("streetAddress", splitAddress[0]);
-                            curLocation.verifiedAddressComponents.put("cityName", splitAddress[1]);
-                            curLocation.verifiedAddressComponents.put("state", splitAddress[2]);
-                            curLocation.verifiedAddressComponents.put("zipCode", splitAddress[3]);
-                            
-                            locations.add(curLocation);
-                            
-                            foundRealAddress = true;
-
-                        } else if (userInput.equals("Stop")) {
-                            return null;
-                        } else if (userInput.equals("None of the above")) {
-
-                            String message = "Please enter the correct address for " + 
-                                              curLocation.firstName + " " +
-                                              curLocation.lastName + ".\n" +
-                                              "(Including the city and zip code, if known)\n" +
-                                              "The supplied address was:\n" +
-                                              inputStreetAddress + " , " +
-                                              curLocation.inputAddressComponents.get("cityName") + " , " +
-                                              curLocation.inputAddressComponents.get("zipCode");
-
-                            userInput = (String) JOptionPane.showInputDialog(
-                                                        frame,
-                                                        message,
-                                                        "Provide correct address",
-                                                        JOptionPane.PLAIN_MESSAGE,
-                                                        null,
-                                                        null,
-                                                        "");
-                            
-                            if (userInput != null && userInput.length() > 0) {
-                                String parameters = "f=json&SingleLine=%s";
-                                String[] paramArr = {userInput};
-                                arcGISCandidates = getArcGISCandidates(parameters, paramArr);
-                            } else {
-                                return null;
-                            }
-
-
-                        }
-                    }
-                }
-            }
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return locations;
-    }
-    */
     public static HashMap<String, long[]> generateFakeDistanceMatrix(ArrayList<Location> locations) {  
         
         HashMap addressMatrix = new HashMap<String, long[]>();
@@ -313,6 +180,8 @@ public class Tools {
      * @param filename The name (and possibly location) of the JSON file.
      * @return A HashMap representing the distance/time between different addresses.
      */
+    
+    /*
     public static HashMap<String, long[]> getDistanceMatrixFromFile(String filename) {
         
         Scanner fReader;
@@ -334,6 +203,7 @@ public class Tools {
         
         return getDistanceMatrixFromJSON(JSONString);
     }
+    */
     
     /**
      * Generate a HashMap linking origin - destination pairs to the distance

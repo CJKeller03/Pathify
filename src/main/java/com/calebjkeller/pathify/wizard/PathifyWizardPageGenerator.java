@@ -35,7 +35,7 @@ import java.awt.print.PrinterJob;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import javax.swing.JFrame;
+import javafx.embed.swing.JFXPanel;
 
 /**
  *
@@ -140,12 +140,12 @@ public class PathifyWizardPageGenerator implements WizardPageGeneratorInterface 
                     PageFormat pf = pj.defaultPage();
                     pf.setOrientation(PageFormat.LANDSCAPE);
                     pj.pageDialog(pf);
-
                     
                     for (int i = 0; i < routes.size(); i++) {
                         RouteDisplayPage page = new RouteDisplayPage("display", controller, routes.get(i), i);
                         routePages.append(page, pf);
                     }  
+                    
                     
                     pj.setPageable(routePages);
                     
@@ -158,8 +158,10 @@ public class PathifyWizardPageGenerator implements WizardPageGeneratorInterface 
 
                     }
                     
+                    
                     enabled = false;
-                    break;
+                    return new RouteDisplayPage("display", controller, routes.get(0), 0);
+                    //break;
             }
         }
         

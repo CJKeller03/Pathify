@@ -17,6 +17,7 @@
 package com.calebjkeller.pathify.wizard.pages;
 
 
+import com.calebjkeller.pathify.MapGenerator;
 import com.calebjkeller.pathify.locationHandling.Route;
 import com.calebjkeller.pathify.wizard.WizardModel;
 import com.calebjkeller.pathify.wizard.WizardPanelController;
@@ -38,6 +39,7 @@ import javax.swing.JFrame;
  */
 public class RouteDisplayPage extends javax.swing.JPanel implements WizardPageInterface, Printable {
     
+    private JFrame dummyFrame = new JFrame();
     private int routeNumber;
     private String ID;
     private WizardPanelController controller;
@@ -56,6 +58,9 @@ public class RouteDisplayPage extends javax.swing.JPanel implements WizardPageIn
         this.ID = ID;
         this.controller = controller;
         initComponents();
+        
+        this.dummyFrame.add(this);
+        //resizeRows();
     }
     
     public String getID() {
@@ -69,11 +74,17 @@ public class RouteDisplayPage extends javax.swing.JPanel implements WizardPageIn
     }
     
     public void disable(WizardModel model) {
-        
+        this.dummyFrame.dispose();
+    }
+    
+    private void resizeRows() {
+        for (int i = 0; i < addressTable.getRowCount(); i++) {
+            Component comp = addressTable.prepareRenderer(addressTable.getCellRenderer(i, 3), i, 3);
+            addressTable.setRowHeight(i, comp.getPreferredSize().height);
+        }
     }
     
     public int print(Graphics g, PageFormat pf, int pageNumber) throws PrinterException {
-        JFrame dummyFrame = new JFrame();
 
         Component comp = this;
 
@@ -93,11 +104,6 @@ public class RouteDisplayPage extends javax.swing.JPanel implements WizardPageIn
             double dScaleHeight = (double) printSize.height / (double) compSize.height;
 
             scaleFactor = Math.min(dScaleHeight, dScaleWidth);
-        }
-
-        // Don't want to scale up, only want to scale down
-        if (scaleFactor > 1d) {
-            scaleFactor = 1d;
         }
 
         // Calcaulte the scaled size...
@@ -126,18 +132,18 @@ public class RouteDisplayPage extends javax.swing.JPanel implements WizardPageIn
         g2.transform(at);
         
         // Print the component
-        dummyFrame.add(this);
-        dummyFrame.pack();
+
+        this.dummyFrame.pack();
         comp.print(g2);
         
         // Dispose of the graphics context, freeing up memory and discarding
         // our changes
         g2.dispose();
-        dummyFrame.dispose();
-
+        this.dummyFrame.dispose();
+        
         comp.revalidate();
         return Printable.PAGE_EXISTS;
-      }    
+    } 
        
     /**
      * This method is called from within the constructor to initialize the form.
@@ -148,19 +154,24 @@ public class RouteDisplayPage extends javax.swing.JPanel implements WizardPageIn
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         jScrollPane1 = new javax.swing.JScrollPane();
         addressTable = new javax.swing.JTable();
-        qrCode = new javax.swing.JLabel();
+        googleQRCode = new javax.swing.JLabel();
         infoBox = new javax.swing.JLabel();
-        mapPanel = new javax.swing.JPanel();
+        mapquestQRCode = new javax.swing.JLabel();
+        mapDisplay = new javax.swing.JLabel();
+        googleMapsLabel = new javax.swing.JLabel();
+        mapquestLabel = new javax.swing.JLabel();
 
+        setBackground(new java.awt.Color(255, 255, 255));
         setForeground(new java.awt.Color(255, 255, 255));
-        setMinimumSize(new java.awt.Dimension(1050, 800));
-        setPreferredSize(new java.awt.Dimension(1050, 800));
+        setMinimumSize(new java.awt.Dimension(1320, 1020));
+        setPreferredSize(new java.awt.Dimension(1320, 1020));
 
         jScrollPane1.setBorder(null);
 
-        addressTable.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        addressTable.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         addressTable.setModel(new javax.swing.table.DefaultTableModel(
             this.route.getAsTable(),
             new String [] {
@@ -182,7 +193,7 @@ public class RouteDisplayPage extends javax.swing.JPanel implements WizardPageIn
                     return canEdit [columnIndex];
                 }
             });
-            addressTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+            addressTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
             addressTable.setFillsViewportHeight(true);
             addressTable.setRowHeight(35);
             addressTable.setRowSelectionAllowed(false);
@@ -193,25 +204,54 @@ public class RouteDisplayPage extends javax.swing.JPanel implements WizardPageIn
             this.tca.adjustColumns();
             jScrollPane1.setViewportView(addressTable);
 
-            qrCode.setIcon(new ImageIcon(this.route.getQRCode(300, 300))
+            googleQRCode.setIcon(new ImageIcon(this.route.getGoogleMapsQRCode(200, 200))
             );
-            qrCode.setMinimumSize(new java.awt.Dimension(300, 300));
-            qrCode.setPreferredSize(new java.awt.Dimension(300, 300));
+            googleQRCode.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+            googleQRCode.setMaximumSize(new java.awt.Dimension(200, 200));
+            googleQRCode.setMinimumSize(new java.awt.Dimension(200, 200));
+            googleQRCode.setPreferredSize(new java.awt.Dimension(200, 200));
 
-            infoBox.setText(String.format("<html> <h2>Route %s</h2> Total distance (miles): %s\nApproximate travel time: %s </html>",
-                this.routeNumber, this.route.getDistance(), this.route.getTime()
+            infoBox.setBackground(new java.awt.Color(204, 204, 204));
+            infoBox.setForeground(new java.awt.Color(0, 0, 0));
+            infoBox.setText(String.format(
+                "<html> <h1>Route %s</h1>"
+                + "Total distance (miles): %s<br>"
+                + "Approximate travel time: %s<br>"
+                + "Total boxes to deliver: %s<br>"
+                + "Scan upper QR code for google maps route (max 11 destinations)<br>"
+                + "Scan lower QR code for mapquest route (displays all destinations)<br>"
+                + "<h2>Please Report Errors</h2>"
+                + "If there is an error with this page, please send a picture of this page and a description of the error to pathify@gmail.com. Thanks!"
+                + "<h3>Pathify V0.3 - July 2020</h3>"
+                + "Designed by Caleb Keller"
+                + "</html>",
+                this.routeNumber, this.route.getDistance(), this.route.getTime(), this.route.getNumBoxes()
             ));
+            infoBox.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+            infoBox.setMinimumSize(new java.awt.Dimension(225, 50));
+            infoBox.setPreferredSize(new java.awt.Dimension(225, 16));
 
-            javax.swing.GroupLayout mapPanelLayout = new javax.swing.GroupLayout(mapPanel);
-            mapPanel.setLayout(mapPanelLayout);
-            mapPanelLayout.setHorizontalGroup(
-                mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGap(0, 726, Short.MAX_VALUE)
+            mapquestQRCode.setIcon(new ImageIcon(this.route.getMapquestQRCode(200, 200))
             );
-            mapPanelLayout.setVerticalGroup(
-                mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGap(0, 0, Short.MAX_VALUE)
-            );
+            mapquestQRCode.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+            mapquestQRCode.setMaximumSize(new java.awt.Dimension(200, 200));
+            mapquestQRCode.setMinimumSize(new java.awt.Dimension(200, 200));
+            mapquestQRCode.setPreferredSize(new java.awt.Dimension(200, 200));
+
+            googleMapsLabel.setBackground(new java.awt.Color(255, 255, 255));
+            googleMapsLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+            googleMapsLabel.setForeground(new java.awt.Color(51, 51, 51));
+            googleMapsLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+            googleMapsLabel.setLabelFor(googleQRCode);
+            googleMapsLabel.setText("Open in Google Maps");
+            googleMapsLabel.setToolTipText("");
+
+            mapquestLabel.setBackground(new java.awt.Color(255, 255, 255));
+            mapquestLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+            mapquestLabel.setForeground(new java.awt.Color(51, 51, 51));
+            mapquestLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+            mapquestLabel.setLabelFor(mapquestQRCode);
+            mapquestLabel.setText("Open in Mapquest");
 
             javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
             this.setLayout(layout);
@@ -222,34 +262,50 @@ public class RouteDisplayPage extends javax.swing.JPanel implements WizardPageIn
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jScrollPane1)
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(mapPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(qrCode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(infoBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addContainerGap())))
+                            .addComponent(mapDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 881, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(mapquestLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(googleMapsLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(googleQRCode, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(mapquestQRCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(infoBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             );
             layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(infoBox, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+                            .addComponent(googleMapsLabel)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(qrCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(mapPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(googleQRCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(mapquestLabel)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(mapquestQRCode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(mapDisplay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(infoBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addContainerGap())
             );
+
+            mapDisplay.setIcon(MapGenerator.createMap());
         }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable addressTable;
+    private javax.swing.Box.Filler filler1;
+    private javax.swing.JLabel googleMapsLabel;
+    private javax.swing.JLabel googleQRCode;
     private javax.swing.JLabel infoBox;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JPanel mapPanel;
-    private javax.swing.JLabel qrCode;
+    private javax.swing.JLabel mapDisplay;
+    private javax.swing.JLabel mapquestLabel;
+    private javax.swing.JLabel mapquestQRCode;
     // End of variables declaration//GEN-END:variables
 }

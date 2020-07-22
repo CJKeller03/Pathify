@@ -19,6 +19,7 @@ package com.calebjkeller.pathify;
 import com.calebjkeller.pathify.wizard.PathifyWizardPageGenerator;
 import com.calebjkeller.pathify.wizard.WizardPanelController;
 import java.awt.BorderLayout;
+import javafx.application.Platform;
 
 /**
  *
@@ -90,6 +91,8 @@ public class App extends javax.swing.JFrame {
                 frame.pack();
                 
                 frame.setVisible(true);
+                
+                MapGenerator.initialize();
             }
         });
     }

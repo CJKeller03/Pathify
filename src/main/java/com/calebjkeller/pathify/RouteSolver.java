@@ -23,7 +23,6 @@ import com.google.ortools.constraintsolver.RoutingModel;
 import com.google.ortools.constraintsolver.RoutingSearchParameters;
 import com.google.ortools.constraintsolver.main;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 // [END import]
 
 /** Minimal VRP.*/
@@ -31,8 +30,6 @@ public class RouteSolver {
   static {
     System.loadLibrary("jniortools");
   }
-
-  private static final Logger logger = Logger.getLogger(RouteSolver.class.getName());
   
   public static ArrayList<Route> solve(SolverDataModel data) {
 

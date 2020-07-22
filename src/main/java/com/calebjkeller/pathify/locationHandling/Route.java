@@ -21,7 +21,7 @@ public class Route {
     ArrayList<Location> locations;
     
     long totalDistance;
-    int approximateTime;
+    long approximateTime;
     long numBoxes;
     
     public Route() {
@@ -31,7 +31,7 @@ public class Route {
         this.numBoxes = 0;
     }
     
-    public Route(ArrayList<Location> locations, int distance, int time, int numBoxes) {
+    public Route(ArrayList<Location> locations, long distance, long time, long numBoxes) {
         this.locations = locations;
         this.totalDistance = distance;
         this.approximateTime = time;
@@ -40,6 +40,7 @@ public class Route {
     
     public void addLocation(Location loc) {
         this.locations.add(loc);
+        this.numBoxes += loc.boxDemand;
     }
     
     public void addLocations(ArrayList<Location> locations) {
@@ -68,6 +69,10 @@ public class Route {
         this.numBoxes = numBoxes;
     }
     
+    public long getNumBoxes() {
+        return this.numBoxes;
+    }
+    
     public String toString() {
         String out = "";
         for (Location loc: this.locations) {
@@ -87,23 +92,24 @@ public class Route {
         
         int i = 0;
         for (Location loc: this.locations) {
-            out[i][0] = loc.firstName + " " + loc.lastName;
-            out[i][1] = loc.getUniqueAddress();
-            out[i][2] = loc.phoneNumber;
-            out[i][3] = loc.notes;
+            String tags = "<html>%s</html>";
+            out[i][0] = String.format(tags, loc.firstName + " " + loc.lastName);
+            out[i][1] = String.format(tags, loc.getSafeAddress());
+            out[i][2] = String.format(tags, loc.phoneNumber);
+            out[i][3] = String.format(tags, loc.notes);
             i++;
         }
         
         return out;
     }
     
-    public BufferedImage getQRCode(int width, int height) {
+    public BufferedImage getGoogleMapsQRCode(int width, int height) {
         String url = "https://www.google.com/maps/dir/?api=1&origin=%s&waypoints=%s&destination=%s";
         String charset = java.nio.charset.StandardCharsets.UTF_8.name();
         
         ArrayList<String> addresses = new ArrayList<String>();
         for (Location loc: this.locations) {
-            addresses.add(loc.getCompleteAddress());
+            addresses.add(loc.getSafeAddress());
         }
         
         String waypoints = String.join("|", addresses.subList(1, addresses.size() - 1));
@@ -118,7 +124,34 @@ public class Route {
             return null;
         }
         
+        return this.generateQRCode(url, width, height);
+    }
+    
+    public BufferedImage getMapquestQRCode(int width, int height) {
+        String url = "http://www.mapquest.com/directions?q=%s";
+        String charset = java.nio.charset.StandardCharsets.UTF_8.name();
         
+        ArrayList<String> addresses = new ArrayList<String>();
+        for (Location loc: this.locations) {
+            addresses.add(loc.getSafeAddress());
+        }
+        
+        try {
+            for (int i = 0; i < addresses.size(); i++) {
+                addresses.set(i, URLEncoder.encode(addresses.get(i),charset));
+            }
+            
+            url = String.format(url, String.join("to:",(addresses.subList(0, addresses.size()))));
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
+        return this.generateQRCode(url, width, height);
+    }    
+    
+    private BufferedImage generateQRCode(String url, int width, int height) {
         QRCodeWriter writer = new QRCodeWriter();
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB); // create an empty image
         

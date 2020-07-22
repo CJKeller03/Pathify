@@ -15,7 +15,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import org.apache.commons.text.*;
 
 /**
  * Used to store information about a location that needs deliveries.
@@ -180,6 +179,10 @@ public class Location {
     
     public void setSafeAddress(String address) {
         oneLineAddress = address;
+    }
+    
+    public String getSafeAddress() {
+        return oneLineAddress;
     }
     
     public void setDemand(int demand) {

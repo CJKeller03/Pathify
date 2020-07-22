@@ -88,7 +88,7 @@
     </Container>
     <Component class="javax.swing.JButton" name="generateButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Generate Tables"/>
+        <Property name="text" type="java.lang.String" value="Select CSV"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="generateButtonActionPerformed"/>
@@ -96,8 +96,11 @@
     </Component>
     <Component class="javax.swing.JButton" name="selectButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Select Tables"/>
+        <Property name="text" type="java.lang.String" value="Select Address Matrix"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selectButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

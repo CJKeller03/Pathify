@@ -19,6 +19,8 @@ package com.calebjkeller.pathify.wizard.pages;
 import com.calebjkeller.pathify.wizard.WizardModel;
 import com.calebjkeller.pathify.wizard.WizardPanelController;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 import java.util.HashMap;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -95,14 +97,19 @@ public class TitleWizardPage extends javax.swing.JPanel implements WizardPageInt
         jTextArea1.setText("To begin generating vehicle routes, please select a folder\ncontaining a name table and a verified address table \n(from a previous execution of this program), or select a\nstandalone name table to have the address table generated\nfrom it (will take longer).");
         jScrollPane1.setViewportView(jTextArea1);
 
-        generateButton.setText("Generate Tables");
+        generateButton.setText("Select CSV");
         generateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 generateButtonActionPerformed(evt);
             }
         });
 
-        selectButton.setText("Select Tables");
+        selectButton.setText("Select Address Matrix");
+        selectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -147,6 +154,25 @@ public class TitleWizardPage extends javax.swing.JPanel implements WizardPageInt
             controller.setNext(true);
         }
     }//GEN-LAST:event_generateButtonActionPerformed
+
+    private void selectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectButtonActionPerformed
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                                            "Address Matrix File", "ser");
+        chooser.setFileFilter(filter);
+        int returnVal = chooser.showDialog(this, "Select");
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                FileInputStream fi = new FileInputStream(chooser.getSelectedFile());
+                ObjectInputStream oi = new ObjectInputStream(fi);
+                this.addressTable = (HashMap) oi.readObject();
+                oi.close();
+                fi.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_selectButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
