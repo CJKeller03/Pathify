@@ -19,7 +19,6 @@ package com.calebjkeller.pathify;
 import com.calebjkeller.pathify.wizard.PathifyWizardPageGenerator;
 import com.calebjkeller.pathify.wizard.WizardPanelController;
 import java.awt.BorderLayout;
-import javafx.application.Platform;
 
 /**
  *
@@ -44,7 +43,7 @@ public class App extends javax.swing.JFrame {
     private void initComponents() {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Pathify V0.3");
+        setTitle("Pathify Pre-Alpha0.8");
         setSize(new java.awt.Dimension(500, 400));
 
         pack();
@@ -92,7 +91,6 @@ public class App extends javax.swing.JFrame {
                 
                 frame.setVisible(true);
                 
-                MapGenerator.initialize();
             }
         });
     }

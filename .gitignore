@@ -6,3 +6,6 @@ resources/
 target/
 *.csv
 
+/ApiKeys.txt
+/hs_err_pid16484.log
+/hs_err_pid18668.log

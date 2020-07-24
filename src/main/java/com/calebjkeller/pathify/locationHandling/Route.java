@@ -9,8 +9,12 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import java.awt.image.BufferedImage;
+import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import javax.imageio.ImageIO;
 
 /**
  * Contains information about a route visiting multiple Locations.
@@ -47,6 +51,18 @@ public class Route {
         for (Location loc: locations) {
             this.locations.add(loc);
         }
+    }
+    
+    public ArrayList<Location> getLocations() {
+        return this.locations;
+    }
+    
+    public ArrayList<Location> getStops() {
+        return (ArrayList) this.locations.subList(1, this.locations.size());
+    }
+    
+    public Location getOrigin() {
+        return this.locations.get(0);
     }
     
     public void setDistance(long dist) {
@@ -174,6 +190,68 @@ public class Route {
         }
         
         return image;
+    }
+    
+    public BufferedImage getMap(int width, int height) {
+        width = Math.min(width, 640);
+        height = Math.min(height, 640);
+        
+        String url = "https://maps.googleapis.com/maps/api/staticmap?%s&size=%sx%s&scale=2&key=%s";
+        String charset = java.nio.charset.StandardCharsets.UTF_8.name();
+        String key;
+        
+        try {
+            key = Files.readAllLines(Paths.get("ApiKeys.txt")).get(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
+        ArrayList<String> markers = new ArrayList<String>();
+        if (this.locations.size() < 15) { 
+            
+            try {
+                for (Location loc: this.locations) {
+                    markers.add(URLEncoder.encode(loc.getSafeAddress()));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+            
+        } else {
+            
+            try {
+                for (Location loc: this.locations) {
+                    double[] coords = LocationTools.geocodeAddress(loc.getSafeAddress());
+                    markers.add(URLEncoder.encode(String.valueOf(coords[0]) + "," + String.valueOf(coords[1])));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }            
+            
+        }
+        
+        ArrayList<String> markerParams = new ArrayList<String>();
+        markerParams.add("markers=color:blue%7Clabel:" + "A" + "%7C" + markers.get(0));
+        for (int i = 1; i < markers.size(); i++) {
+            String letter = i >= 0 && i < 26 ? String.valueOf((char)(i + 'A')) : null;
+            markerParams.add("markers=color:red%7Clabel:" + letter + "%7C" + markers.get(i));
+        }
+        
+        url = String.format(url, String.join("&", markerParams), 
+                                 String.valueOf(width),
+                                 String.valueOf(height),
+                                 key);
+        
+        try {
+            return ImageIO.read(new URL(url));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
     }
     
 }

@@ -35,7 +35,6 @@ import java.awt.print.PrinterJob;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import javafx.embed.swing.JFXPanel;
 
 /**
  *
@@ -144,8 +143,7 @@ public class PathifyWizardPageGenerator implements WizardPageGeneratorInterface 
                     for (int i = 0; i < routes.size(); i++) {
                         RouteDisplayPage page = new RouteDisplayPage("display", controller, routes.get(i), i);
                         routePages.append(page, pf);
-                    }  
-                    
+                    }                 
                     
                     pj.setPageable(routePages);
                     

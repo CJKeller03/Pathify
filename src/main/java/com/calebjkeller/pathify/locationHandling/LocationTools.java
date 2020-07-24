@@ -19,6 +19,8 @@ package com.calebjkeller.pathify.locationHandling;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Scanner;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -112,5 +114,66 @@ public class LocationTools {
             return null;
         }                
     } 
+    
+    public static double[] geocodeAddress(String address) {
+        
+        String url = "http://www.mapquestapi.com/geocoding/v1/address?key=%s&location=%s"; 
+        String charset = java.nio.charset.StandardCharsets.UTF_8.name();
+        
+        try {
+            
+            String key = Files.readAllLines(Paths.get("ApiKeys.txt")).get(2);
+            address = URLEncoder.encode(address);
+            
+            url = String.format(url, key, address);
+                                                      
+
+            // Open a connection to the API
+            URLConnection connection = new URL(url).openConnection();
+            connection.setRequestProperty("Accept-Charset", charset);
+            Scanner responseStream = new Scanner(connection.getInputStream());
+            
+            String response = "";
+            
+            while (responseStream.hasNext()) {
+                response += responseStream.nextLine();
+            }
+            
+            responseStream.close();
+            
+            JSONObject asJson = (JSONObject) new JSONParser().parse(response);
+            JSONArray resultList = (JSONArray) asJson.get("results");
+            JSONObject thisResult = (JSONObject) resultList.get(0);
+            JSONArray locations = (JSONArray) thisResult.get("locations");
+            JSONObject topLocation = (JSONObject) locations.get(0);
+            JSONObject latLng = (JSONObject) topLocation.get("latLng");
+            
+            double[] coordinates = {(double) latLng.get("lat"), (double) latLng.get("lng")};
+            
+            return coordinates;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }                    
+
+    }
+    
+    public static double[] getCentroid(Route route) {
+        double x = 0;
+        double y = 0;
+        int total = 0;
+        
+        for (Location loc: route.getLocations()) {
+            double[] coords = LocationTools.geocodeAddress(loc.getSafeAddress());
+            x += coords[0];
+            y += coords[1];
+            total += 1;
+        }
+        
+        double[] centroid = {x/total, y/total};
+        
+        return centroid;
+    }
     
 }

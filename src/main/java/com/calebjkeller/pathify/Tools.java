@@ -6,22 +6,16 @@
 package com.calebjkeller.pathify;
 
 import com.calebjkeller.pathify.locationHandling.Location;
-import components.ListDialog;
-
-import java.io.BufferedReader;
-import java.io.File;
 import java.util.ArrayList;
 import java.io.IOException;
-import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.LineNumberReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Scanner;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
@@ -80,7 +74,7 @@ public class Tools {
         // Read the API key to be used from a file
         String key;
         try {
-            key = new BufferedReader(new FileReader("GoogleApiKey.txt")).readLine();
+            key = Files.readAllLines(Paths.get("ApiKeys.txt")).get(1);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

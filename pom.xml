@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.calebjkeller</groupId>
     <artifactId>Pathify</artifactId>
-    <version>0.3</version>
+    <version>Pre-Alpha0.8</version>
     <packaging>jar</packaging>
     <repositories>
         <repository>
@@ -12,11 +12,6 @@
         </repository>
     </repositories>
     <dependencies>
-        <dependency>
-            <groupId>com.esri.arcgisruntime</groupId>
-            <artifactId>arcgis-java</artifactId>
-            <version>${arcgis.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.esri.arcgisruntime</groupId>
             <artifactId>arcgis-java-jnilibs</artifactId>
@@ -48,16 +43,6 @@
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
             <version>1.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-swing</artifactId>
-            <version>15-ea+7</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>15-ea+7</version>
         </dependency>
     </dependencies>
     <properties>

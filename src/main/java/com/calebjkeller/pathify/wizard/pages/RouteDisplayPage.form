@@ -45,10 +45,10 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" min="-2" pref="1314" max="-2" attributes="0"/>
                   <Group type="102" attributes="0">
-                      <Component id="mapDisplay" min="-2" pref="881" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="mapDisplay" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
                               <Component id="mapquestLabel" alignment="0" max="32767" attributes="0"/>
@@ -58,8 +58,8 @@
                           <Component id="mapquestQRCode" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="infoBox" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="-4" max="32767" attributes="0"/>
+                      <Component id="infoBox" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -68,22 +68,25 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <Component id="jScrollPane1" pref="550" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" pref="544" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Component id="googleMapsLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="googleQRCode" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="mapquestLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="mapquestQRCode" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="mapDisplay" max="32767" attributes="0"/>
                   <Component id="infoBox" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="mapDisplay" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -154,7 +157,7 @@
           <Color blue="0" green="0" red="0" type="rgb"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="String.format(&#xa;    &quot;&lt;html&gt; &lt;h1&gt;Route %s&lt;/h1&gt;&quot;&#xa;    + &quot;Total distance (miles): %s&lt;br&gt;&quot;&#xa;    + &quot;Approximate travel time: %s&lt;br&gt;&quot;&#xa;    + &quot;Total boxes to deliver: %s&lt;br&gt;&quot;&#xa;    + &quot;Scan upper QR code for google maps route (max 11 destinations)&lt;br&gt;&quot;&#xa;    + &quot;Scan lower QR code for mapquest route (displays all destinations)&lt;br&gt;&quot;&#xa;    + &quot;&lt;h2&gt;Please Report Errors&lt;/h2&gt;&quot;&#xa;    + &quot;If there is an error with this page, please send a picture of this page and a description of the error to pathify@gmail.com. Thanks!&quot;&#xa;    + &quot;&lt;h3&gt;Pathify V0.3 - July 2020&lt;/h3&gt;&quot;&#xa;    + &quot;Designed by Caleb Keller&quot;&#xa;    + &quot;&lt;/html&gt;&quot;,&#xa;    this.routeNumber, this.route.getDistance(), this.route.getTime(), this.route.getNumBoxes()&#xa;)" type="code"/>
+          <Connection code="String.format(&#xa;    &quot;&lt;html&gt; &lt;h1&gt;Route %s&lt;/h1&gt;&quot;&#xa;    + &quot;Total distance (miles): %s&lt;br&gt;&quot;&#xa;    + &quot;Approximate travel time: %s&lt;br&gt;&quot;&#xa;    + &quot;Total boxes to deliver: %s&lt;br&gt;&quot;&#xa;    + &quot;Scan upper QR code for google maps route (max 11 destinations)&lt;br&gt;&quot;&#xa;    + &quot;Scan lower QR code for mapquest route (displays all destinations)&lt;br&gt;&quot;&#xa;    + &quot;&lt;h2&gt;Please Report Errors&lt;/h2&gt;&quot;&#xa;    + &quot;If there is an error with this page, please send a picture of this page and a description of the error to pathify@gmail.com. Thanks!&quot;&#xa;    + &quot;&lt;h3&gt;Pathify Pre-Alpha0.8 - July 2020&lt;/h3&gt;&quot;&#xa;    + &quot;Designed by Caleb Keller&quot;&#xa;    + &quot;&lt;/html&gt;&quot;,&#xa;    this.routeNumber, this.route.getDistance(), this.route.getTime(), this.route.getNumBoxes()&#xa;)" type="code"/>
         </Property>
         <Property name="verticalAlignment" type="int" value="1"/>
         <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -181,11 +184,6 @@
           <Dimension value="[200, 200]"/>
         </Property>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="mapDisplay">
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="mapDisplay.setIcon(MapGenerator.createMap());"/>
-      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="googleMapsLabel">
       <Properties>
@@ -223,6 +221,20 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Open in Mapquest"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="mapDisplay">
+      <Properties>
+        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[640, 640]"/>
+        </Property>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[640, 450]"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="/*&#xa;this.dummyFrame.pack();&#xa;int maxHeight = this.getHeight() - jScrollPane1.getHeight();&#xa;int maxWidth = this.getWidth() - infoBox.getWidth() - googleQRCode.getWidth();&#xa;int imgHeight;&#xa;int imgWidth;&#xa;double ratio = (double) maxHeight / maxWidth;&#xa;if (maxWidth &gt; maxHeight) {&#xa;    imgWidth = Math.min(maxWidth, 640);&#xa;    imgHeight = new Long(Math.round(ratio / maxWidth)).intValue();&#xa;} else {&#xa;    imgHeight = Math.min(maxHeight, 640);&#xa;    imgWidth = new Long(Math.round(maxHeight / ratio)).intValue();&#xa;}&#xa;*/&#xa;mapDisplay.setIcon(new ImageIcon(this.route.getMap(640, 450).getScaledInstance(640, 450, Image.SCALE_SMOOTH)));"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="//mapDisplay.setIcon(new ImageIcon(new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_RGB)));"/>
+      </AuxValues>
     </Component>
   </SubComponents>
 </Form>
