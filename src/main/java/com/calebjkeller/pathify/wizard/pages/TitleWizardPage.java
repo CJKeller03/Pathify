@@ -34,8 +34,8 @@ public class TitleWizardPage extends javax.swing.JPanel implements WizardPageInt
     private String ID;
     private WizardPanelController controller;
     
+    private File adfFile;
     private File csvFile;
-    private HashMap addressTable;
     
     /**
      * Creates new form WizardPage
@@ -57,11 +57,8 @@ public class TitleWizardPage extends javax.swing.JPanel implements WizardPageInt
     }
     
     public void disable(WizardModel model) {
-        if (this.addressTable == null) {
-            model.setObject("doGenerate", true);
-        } else {
-            model.setObject("doGenerate", false);
-            model.setObject("addressTable", this.addressTable);
+        if (this.adfFile != null) {
+            model.setObject("adfFile", this.adfFile);
         }
         
         model.setObject("csvFile", this.csvFile);
@@ -104,7 +101,7 @@ public class TitleWizardPage extends javax.swing.JPanel implements WizardPageInt
             }
         });
 
-        selectButton.setText("Select Address Matrix");
+        selectButton.setText("Select Address Data File");
         selectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 selectButtonActionPerformed(evt);
@@ -158,16 +155,12 @@ public class TitleWizardPage extends javax.swing.JPanel implements WizardPageInt
     private void selectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectButtonActionPerformed
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                                            "Address Matrix File", "ser");
+                                            "Address Data File", "adf");
         chooser.setFileFilter(filter);
         int returnVal = chooser.showDialog(this, "Select");
         if(returnVal == JFileChooser.APPROVE_OPTION) {
             try {
-                FileInputStream fi = new FileInputStream(chooser.getSelectedFile());
-                ObjectInputStream oi = new ObjectInputStream(fi);
-                this.addressTable = (HashMap) oi.readObject();
-                oi.close();
-                fi.close();
+                this.adfFile = chooser.getSelectedFile();
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -9,10 +9,12 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import java.awt.image.BufferedImage;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
@@ -22,10 +24,13 @@ import javax.imageio.ImageIO;
  * @author Caleb Keller
  */
 public class Route {
+    
+    public static final double METERS_PER_MILE = 1609.344;
+    
     ArrayList<Location> locations;
     
-    long totalDistance;
-    long approximateTime;
+    long totalDistance; //In meters
+    long approximateTime; //In seconds
     long numBoxes;
     
     public Route() {
@@ -65,20 +70,38 @@ public class Route {
         return this.locations.get(0);
     }
     
-    public void setDistance(long dist) {
+    public void setDistanceMeters(long dist) {
         this.totalDistance = dist;
     }
     
-    public long getDistance() {
+    public long getDistanceMeters() {
         return this.totalDistance;
     }
     
-    public void setTime(int time) {
+    public double getDistanceMiles() {
+        DecimalFormat df = new DecimalFormat("##0.00");
+        df.setRoundingMode(RoundingMode.HALF_UP);
+        return Double.valueOf(df.format(this.totalDistance / METERS_PER_MILE));
+    }
+    
+    public void setTime(long time) {
         this.approximateTime = time;
     }
     
     public long getTime() {
         return 0l;
+    }
+    
+    public String getTimeString() {
+        
+        long hours = this.approximateTime / 3600;
+        long minutes = (this.approximateTime % 3600) / 60;
+        long seconds = (this.approximateTime % 3600) % 60;
+        
+        return String.valueOf(hours) + " hours, " +
+               String.valueOf(minutes) + " minutes, and " +
+               String.valueOf(seconds) + " seconds";
+        
     }
     
     public void setNumBoxes(long numBoxes) {
@@ -120,6 +143,10 @@ public class Route {
     }
     
     public BufferedImage getGoogleMapsQRCode(int width, int height) {
+        if (this.locations.size() <= 1) {
+            return null;
+        }
+        
         String url = "https://www.google.com/maps/dir/?api=1&origin=%s&waypoints=%s&destination=%s";
         String charset = java.nio.charset.StandardCharsets.UTF_8.name();
         
@@ -144,6 +171,10 @@ public class Route {
     }
     
     public BufferedImage getMapquestQRCode(int width, int height) {
+        if (this.locations.size() <= 1) {
+            return null;
+        }        
+        
         String url = "http://www.mapquest.com/directions?q=%s";
         String charset = java.nio.charset.StandardCharsets.UTF_8.name();
         
@@ -193,6 +224,10 @@ public class Route {
     }
     
     public BufferedImage getMap(int width, int height) {
+        if (this.locations.size() <= 1) {
+            return null;
+        }
+        
         width = Math.min(width, 640);
         height = Math.min(height, 640);
         
@@ -234,10 +269,10 @@ public class Route {
         }
         
         ArrayList<String> markerParams = new ArrayList<String>();
-        markerParams.add("markers=color:blue%7Clabel:" + "A" + "%7C" + markers.get(0));
+        markerParams.add("markers=color:blue%7Csize:mid%7C" + markers.get(0));
         for (int i = 1; i < markers.size(); i++) {
-            String letter = i >= 0 && i < 26 ? String.valueOf((char)(i + 'A')) : null;
-            markerParams.add("markers=color:red%7Clabel:" + letter + "%7C" + markers.get(i));
+            String letter = (i-1) >= 0 && (i-1) < 26 ? String.valueOf((char)((i-1) + 'A')) : null;
+            markerParams.add("markers=color:red%7Csize:mid%7Clabel:" + letter + "%7C" + markers.get(i));
         }
         
         url = String.format(url, String.join("&", markerParams), 

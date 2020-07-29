@@ -41,8 +41,6 @@ public class WizardModel {
     }
     
     public void setObject(String key, Object data) {
-        System.out.println("set");
-        
         this.data.put(key, data);
     }
     

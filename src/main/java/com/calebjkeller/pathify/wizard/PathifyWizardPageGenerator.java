@@ -16,11 +16,13 @@
  */
 package com.calebjkeller.pathify.wizard;
 
+import com.calebjkeller.pathify.AddressData;
 import com.calebjkeller.pathify.RouteSolver;
 import com.calebjkeller.pathify.SolverDataModel;
 import com.calebjkeller.pathify.Tools;
 import com.calebjkeller.pathify.locationHandling.DeliveryList;
 import com.calebjkeller.pathify.locationHandling.Location;
+import com.calebjkeller.pathify.locationHandling.LocationTools;
 import com.calebjkeller.pathify.locationHandling.Route;
 import com.calebjkeller.pathify.wizard.pages.AddressSelectWizardPage;
 import com.calebjkeller.pathify.wizard.pages.BaseWizardPage;
@@ -35,6 +37,8 @@ import java.awt.print.PrinterJob;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -52,6 +56,10 @@ public class PathifyWizardPageGenerator implements WizardPageGeneratorInterface 
     private boolean enabled = true;
     private int curLocation;
     
+    private ArrayList<Location> skippedLocations;
+    private ArrayList<String[]> skippedLocationOptions;
+    private String[] currentLocationOptions;
+    
     public PathifyWizardPageGenerator() {
         
     }
@@ -67,63 +75,113 @@ public class PathifyWizardPageGenerator implements WizardPageGeneratorInterface 
                     
                 case "started":
                     list = new DeliveryList((File) model.getObject("csvFile"));
-                    
-                    System.out.println(list.getLocations().size());
-                    
-                    if ((Boolean) model.getObject("doGenerate")) {
-                        state = "generateAddresses";
+                    if (model.hasObject("adfFile")) {
+                        AddressData.loadADF((File) model.getObject("adfFile"));
+                    } else {
+                        AddressData.createNew(null);
                     }
+                    
+                    this.skippedLocations = new ArrayList<Location>();
+                    this.skippedLocationOptions = new ArrayList<String[]>();
+                    
+                    state = "validateAddresses-Serve";
+                    curLocation = 0;
                     
                     break;
 
-                case "generateAddresses":
-
-                    if (!model.hasObject("selectedAddress")) {
+                case "validateAddresses-Serve":
+                    
+                    if (curLocation < list.getSize()) {
+                        Location loc = list.getLocation(curLocation);
+                        currentLocationOptions = LocationTools.getArcGISCandidates(loc);
+                        
+                        boolean foundMatch = false;
+                        
+                        for (String option: currentLocationOptions) {
+                            if (AddressData.addressExists(option)) {
+                                loc.setSafeAddress(option);
+                                curLocation++;                                 
+                                foundMatch = true;
+                                break;
+                            }
+                        }
+                        
+                        if (foundMatch) {
+                           break;
+                        }
+                        
+                        state = "validateAddresses-Store";
+                        return new AddressSelectWizardPage("select", controller, loc, currentLocationOptions, true);
+                        
+                    } else if (skippedLocations.size() > 0) {
                         curLocation = 0;
+                        state = "validateSkipped-Serve";
                     } else {
-                        String selectedAddress = (String) model.getObject("selectedAddress");
-                        if (!selectedAddress.equals("SKIP")) {
-                            list.getLocation(curLocation).setSafeAddress(selectedAddress);
-                        }
-                        curLocation++;
-                    }
-                    
-                    if (curLocation == list.getSize()) {
-                        
-                        if (model.hasObject("skippedAddresses")) {
-                            state = "generateSkipped";
-                        } else {
-                            state = "generateRoutes";
-                        }
-                        
-                    } else {
-                        return new AddressSelectWizardPage("select", controller, list.getLocation(curLocation)); 
+                        state = "generateRoutes";
                     }
                     
                     break;
                     
-                case "generateSkipped":
-                    enabled = false;
+                case "validateAddresses-Store":
+                    
+                    String selectedAddress = (String) model.getObject("selectedAddress");
+                    
+                    if (selectedAddress.equals("SKIP")) {
+                        skippedLocations.add(list.getLocation(curLocation));
+                        skippedLocationOptions.add(currentLocationOptions);                        
+                    } else {
+                        list.getLocation(curLocation).setSafeAddress(selectedAddress);
+                        AddressData.addAddress(selectedAddress);
+                    }
+                    
+                    curLocation++;
+                    state = "validateAddresses-Serve";
+                    break;
+                    
+                case "validateSkipped-Serve":
+                    
+                    if (curLocation < skippedLocations.size()) {
+                        Location loc = skippedLocations.get(curLocation);
+                        currentLocationOptions = skippedLocationOptions.get(curLocation);
+                        state = "validateSkipped-Store";
+                        return new AddressSelectWizardPage("select", controller, loc, currentLocationOptions, false);
+                    } else {
+                        state = "generateRoutes";
+                    }
                     
                     break;
+                    
+                case "validateSkipped-Store":
+                    
+                    selectedAddress = (String) model.getObject("selectedAddress");
+
+                    list.getLocation(curLocation).setSafeAddress(selectedAddress);
+                    AddressData.addAddress(selectedAddress);
+                    
+                    curLocation++;
+                    state = "validateAddresses-Serve";
+                    break;                    
                     
                 case "generateRoutes":
                     controller.pushNextPage(new LoadingWizardPage("loading", controller));
                     
-                    
+                    // Generates fake coordinates for the fake distance matrix
+                    /*
                     int n = 0;
-                    for (Location loc: (ArrayList<Location>) list.getLocations()) {
-                        loc.testPosition[0] = n % 3;
-                        loc.testPosition[1] = n / 3;
+                    for (Location loc: list.getLocations()) {
+                        loc.testPosition[0] = (n % 3) * 1609;
+                        loc.testPosition[1] = (n / 3) * 1609;
                         n+=1;
                     }
+                    */
                     
+                    HashMap<String, long[]> costMatrix = Tools.generateDistanceMatrix(list.getLocations());
+                    AddressData.addCosts(costMatrix);
                     
-                    //HashMap<String, long[]> costMatrix = Tools.generateDistanceMatrix(list.getLocations());
-                    HashMap costMatrix = Tools.generateFakeDistanceMatrix(list.getLocations());
+                    //HashMap costMatrix = Tools.generateFakeDistanceMatrix(list.getLocations());
                     
                     int[] tmpVehicles = {0, 1, 0, 2, 1};
-                    SolverDataModel dataModel = new SolverDataModel(costMatrix, list.getLocations(), tmpVehicles);
+                    SolverDataModel dataModel = new SolverDataModel(list.getLocations(), tmpVehicles);
                     ArrayList<Route> routes = RouteSolver.solve(dataModel);
                     
                     for (Route route: routes) {
@@ -141,8 +199,10 @@ public class PathifyWizardPageGenerator implements WizardPageGeneratorInterface 
                     pj.pageDialog(pf);
                     
                     for (int i = 0; i < routes.size(); i++) {
-                        RouteDisplayPage page = new RouteDisplayPage("display", controller, routes.get(i), i);
-                        routePages.append(page, pf);
+                        if (routes.get(i).getLocations().size() > 1) {
+                            RouteDisplayPage page = new RouteDisplayPage("display", controller, routes.get(i), i);
+                            routePages.append(page, pf);
+                        }
                     }                 
                     
                     pj.setPageable(routePages);
@@ -156,7 +216,14 @@ public class PathifyWizardPageGenerator implements WizardPageGeneratorInterface 
 
                     }
                     
-                    
+                    JFileChooser chooser = new JFileChooser();
+                    FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                                            "Address Data File", "adf");
+                    chooser.setFileFilter(filter);
+                    if (chooser.showSaveDialog(controller.getPanel()) == JFileChooser.APPROVE_OPTION) {
+                        AddressData.save(chooser.getSelectedFile());
+                      // save to file
+                    }
                     enabled = false;
                     return new RouteDisplayPage("display", controller, routes.get(0), 0);
                     //break;

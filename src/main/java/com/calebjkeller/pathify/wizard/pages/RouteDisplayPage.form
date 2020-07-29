@@ -43,7 +43,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jScrollPane1" min="-2" pref="1314" max="-2" attributes="0"/>
                   <Group type="102" attributes="0">
@@ -157,7 +157,7 @@
           <Color blue="0" green="0" red="0" type="rgb"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="String.format(&#xa;    &quot;&lt;html&gt; &lt;h1&gt;Route %s&lt;/h1&gt;&quot;&#xa;    + &quot;Total distance (miles): %s&lt;br&gt;&quot;&#xa;    + &quot;Approximate travel time: %s&lt;br&gt;&quot;&#xa;    + &quot;Total boxes to deliver: %s&lt;br&gt;&quot;&#xa;    + &quot;Scan upper QR code for google maps route (max 11 destinations)&lt;br&gt;&quot;&#xa;    + &quot;Scan lower QR code for mapquest route (displays all destinations)&lt;br&gt;&quot;&#xa;    + &quot;&lt;h2&gt;Please Report Errors&lt;/h2&gt;&quot;&#xa;    + &quot;If there is an error with this page, please send a picture of this page and a description of the error to pathify@gmail.com. Thanks!&quot;&#xa;    + &quot;&lt;h3&gt;Pathify Pre-Alpha0.8 - July 2020&lt;/h3&gt;&quot;&#xa;    + &quot;Designed by Caleb Keller&quot;&#xa;    + &quot;&lt;/html&gt;&quot;,&#xa;    this.routeNumber, this.route.getDistance(), this.route.getTime(), this.route.getNumBoxes()&#xa;)" type="code"/>
+          <Connection code="String.format(&#xa;    &quot;&lt;html&gt; &lt;h1&gt;Route %s&lt;/h1&gt;&quot;&#xa;    + &quot;Total distance (miles): %s&lt;br&gt;&quot;&#xa;    + &quot;Approximate travel time: %s&lt;br&gt;&quot;&#xa;    + &quot;Total boxes to deliver: %s&lt;br&gt;&quot;&#xa;    + &quot;Scan upper QR code for google maps route (max 11 destinations)&lt;br&gt;&quot;&#xa;    + &quot;Scan lower QR code for mapquest route (displays all destinations)&lt;br&gt;&quot;&#xa;    + &quot;&lt;h2&gt;Please Report Errors&lt;/h2&gt;&quot;&#xa;    + &quot;If there is an error with this page, please send a picture of this page and a description of the error to pathify@gmail.com. Thanks!&quot;&#xa;    + &quot;&lt;h3&gt;Pathify Pre-Alpha0.8 - July 2020&lt;/h3&gt;&quot;&#xa;    + &quot;Designed by Caleb Keller&quot;&#xa;    + &quot;&lt;/html&gt;&quot;,&#xa;    this.routeNumber, this.route.getDistanceMiles(), this.route.getTimeString(), this.route.getNumBoxes()&#xa;)" type="code"/>
         </Property>
         <Property name="verticalAlignment" type="int" value="1"/>
         <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">

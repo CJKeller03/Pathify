@@ -226,7 +226,7 @@ public class RouteDisplayPage extends javax.swing.JPanel implements WizardPageIn
                 + "<h3>Pathify Pre-Alpha0.8 - July 2020</h3>"
                 + "Designed by Caleb Keller"
                 + "</html>",
-                this.routeNumber, this.route.getDistance(), this.route.getTime(), this.route.getNumBoxes()
+                this.routeNumber, this.route.getDistanceMiles(), this.route.getTimeString(), this.route.getNumBoxes()
             ));
             infoBox.setVerticalAlignment(javax.swing.SwingConstants.TOP);
             infoBox.setMinimumSize(new java.awt.Dimension(225, 50));
@@ -263,7 +263,7 @@ public class RouteDisplayPage extends javax.swing.JPanel implements WizardPageIn
             layout.setHorizontalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addContainerGap()
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1314, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createSequentialGroup()

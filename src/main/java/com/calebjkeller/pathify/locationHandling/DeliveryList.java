@@ -63,7 +63,7 @@ public class DeliveryList {
         return locations;
     }
     
-    public ArrayList getLocations() {
+    public ArrayList<Location> getLocations() {
         return this.locations;
     }
     

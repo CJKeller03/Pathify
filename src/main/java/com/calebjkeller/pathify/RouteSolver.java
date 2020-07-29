@@ -51,7 +51,7 @@ public class RouteSolver {
           // Convert from routing variable Index to user NodeIndex.
           int fromNode = manager.indexToNode(fromIndex);
           int toNode = manager.indexToNode(toIndex);
-          return data.costMatrix[fromNode][toNode];
+          return data.costMatrix[fromNode][toNode][0];
         });
     // [END transit_callback]
 
@@ -101,6 +101,7 @@ public class RouteSolver {
       long index = routing.start(i);
       Route route = new Route();
       
+      long routeTime = 0;
       long routeDistance = 0;
       long routeLoad = 0;
       //String route = "";
@@ -115,9 +116,11 @@ public class RouteSolver {
         long previousIndex = index;
         index = solution.value(routing.nextVar(index));
         routeDistance += routing.getArcCostForVehicle(previousIndex, index, i);
+        routeTime += data.costMatrix[manager.indexToNode(previousIndex)][manager.indexToNode(index)][1];
       }
       
-      route.setDistance(routeDistance);
+      route.setDistanceMeters(routeDistance);
+      route.setTime(routeTime);
       route.setNumBoxes(routeLoad);
       
       //route += manager.indexToNode(routing.end(i));

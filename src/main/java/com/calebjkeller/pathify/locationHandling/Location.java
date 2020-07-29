@@ -5,16 +5,7 @@
  */
 package com.calebjkeller.pathify.locationHandling;
 
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.Scanner;
-import org.json.simple.JSONArray;
-
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
 
 /**
  * Used to store information about a location that needs deliveries.

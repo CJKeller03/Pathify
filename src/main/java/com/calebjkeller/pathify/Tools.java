@@ -49,8 +49,8 @@ public class Tools {
                 double xDist = locA.testPosition[0] - locB.testPosition[0];
                 double yDist = locA.testPosition[1] - locB.testPosition[1];
                 
-                long dist = Math.round(Math.sqrt(xDist*xDist + yDist*yDist)*10000);
-                long tmp[] = {dist, dist};
+                long dist = Math.round(Math.sqrt(xDist*xDist + yDist*yDist));
+                long tmp[] = {dist, dist/13};
                 addressMatrix.put(key, tmp);
             }
         }
@@ -74,7 +74,7 @@ public class Tools {
         // Read the API key to be used from a file
         String key;
         try {
-            key = Files.readAllLines(Paths.get("ApiKeys.txt")).get(1);
+            key = Files.readAllLines(Paths.get("ApiKeys.txt")).get(0);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -104,7 +104,21 @@ public class Tools {
             String origin = addresses.get(i);
             
             ArrayList<String> destinationList = new ArrayList<String>(addresses);
-            destinationList.remove(i);            
+            destinationList.remove(i);
+            
+            for (int j = destinationList.size() - 1; j >= 0; j--) {
+                if (AddressData.hasCost(origin + destinationList.get(j))) {
+                    System.out.println("skipped: " + origin + destinationList.get(j));
+                    destinationList.remove(j);
+                } else {
+                    System.out.println("didn't skip: " + origin + destinationList.get(j));
+                }
+            }
+            
+            System.out.println("Attempted following look-ups:");
+            for (String dest: destinationList) {
+                System.out.println(origin + dest);
+            }
             
             for (int j = 0; j < destinationList.size(); j += 25) {
 
@@ -249,9 +263,9 @@ public class Tools {
                 
                 // Generate the key by concatenating the origin and destination
                 // addresses together, and add the data to the HashMap.
-                long[] tmp = {distance, duration};
+                
                 //addressMatrix.put((String) origins.get(i) + (String) destinations.get(j), tmp);
-                addressMatrix.put(origin + inputDestinations.get(j), tmp);
+                addressMatrix.put(origin + inputDestinations.get(j), new long[] {distance, duration});
                 
             }
             

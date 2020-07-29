@@ -30,12 +30,16 @@ public class SolverDataModel {
     String[] addressOrdering;
     HashMap<String, ArrayList<Location>> addressMapping;
     
-    public long[][] costMatrix;
+    public long[][][] costMatrix;
     public long[] demands;
     public long[] vehicleCapacities;
     
     public int vehicleNumber;
     public int depot = 0;
+    
+    public SolverDataModel(ArrayList<Location> locations,int[] vehicles) {
+        this(AddressData.getADF().costMap, locations, vehicles);
+    }
     
     public SolverDataModel(HashMap<String, long[]> costMap, ArrayList<Location> locations,
                            int[] vehicles){
@@ -68,7 +72,7 @@ public class SolverDataModel {
         
         int numUniqueAddresses = addressOrdering.length;
         
-        this.costMatrix = new long[numUniqueAddresses][numUniqueAddresses];
+        this.costMatrix = new long[numUniqueAddresses][numUniqueAddresses][2];
         
         for (int i = 0; i < numUniqueAddresses; i++) {
             for (int j = 0; j < numUniqueAddresses; j++) {
@@ -80,13 +84,15 @@ public class SolverDataModel {
                     
                     if (cost == null) {
                         System.err.println("unable to find cost for: " + key);
-                        this.costMatrix[i][j] = 0;
+                        this.costMatrix[i][j][0] = 0;
+                        this.costMatrix[i][j][1] = 0;
                     } else {
-                        this.costMatrix[i][j] = cost[0];
+                        this.costMatrix[i][j] = cost;
                     }
                     
                 } else {
-                    this.costMatrix[i][j] = 0;
+                    this.costMatrix[i][j][0] = 0;
+                    this.costMatrix[i][j][1] = 0;
                 }
             }
         }

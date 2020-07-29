@@ -39,6 +39,7 @@ public class AddressSelectWizardPage extends javax.swing.JPanel implements Wizar
     private String[] addressOptions;
     private Location loc;
     
+    private boolean skipEnabled;
     private boolean isSkip = false;
     private boolean customAddressMode = false;
     
@@ -46,12 +47,13 @@ public class AddressSelectWizardPage extends javax.swing.JPanel implements Wizar
      * Creates new form WizardPage
      */
     public AddressSelectWizardPage(String ID, WizardPanelController controller,
-                                   Location loc) {
+                                   Location loc, String[] options, boolean skipEnabled) {
         this.ID = ID;
         this.controller = controller;
-        
-        addressOptions = LocationTools.getArcGISCandidates(loc);
         this.loc = loc;
+        this.skipEnabled = skipEnabled;
+        
+        addressOptions = options;
         
         initComponents();
     }
@@ -67,10 +69,10 @@ public class AddressSelectWizardPage extends javax.swing.JPanel implements Wizar
         System.out.println("select page started!");
         
         // SKIPS PAGE AUTOMATICALLY - REMOVE FROM HERE
-        /*
+        
         addressSelectBox.setSelectedIndex(0);
         controller.pullNextPage();
-        */
+        
         // TO HERE
     }
     
@@ -118,7 +120,7 @@ public class AddressSelectWizardPage extends javax.swing.JPanel implements Wizar
         description.setText(String.format(this.descriptionText, loc.firstName + " " + loc.lastName, loc.getUniqueAddress()));
 
         skipButton.setText("Skip");
-        skipButton.setEnabled(false);
+        skipButton.setEnabled(this.skipEnabled);
         skipButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 skipButtonActionPerformed(evt);
