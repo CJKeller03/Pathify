@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 caleb
+ * Copyright (C) 2020 Caleb Keller
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,20 +27,16 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 /**
- *
+ * A class for processing and manipulating location data.
  * @author Caleb Keller
  */
 public class LocationTools {
     
     /**
-     * Find the standard postal address that refers to the same location as the
-     * input address. If the address does not exist, but a similar address likely
-     * to refer to the same location is found, the Location object's 
-     * verifiedAddressComponents entries will be set, and this method will return false.
-     * If no address can be found, this method will return false without setting
-     * the verifiedAddressComponents entries.
-     * 
-     * @return Whether the verification was successful.
+     * Find the standard postal addresses that are likely to refer to the same 
+     * place as the address stored in the Location object, ranked from most 
+     * likely to least likely.
+     * @return The list of candidate addresses
      */
     public static String[] getArcGISCandidates(Location loc) {
 
@@ -54,6 +50,14 @@ public class LocationTools {
         return getArcGISCandidates(address, cityName, zipCode);
     }
     
+    /**
+     * Find the standard postal addresses that are likely to refer to the same 
+     * place as the input address, ranked from most likely to least likely.
+     * @param streetAddress The street address (street name and house number)
+     * @param cityName The name of the city the address is in
+     * @param zipCode The zip code of the address
+     * @return The list of candidate addresses
+     */
     public static String[] getArcGISCandidates(String streetAddress, String cityName, String zipCode) {
         
         String parameterFormat = "f=json&address=%s&city=%s&zip=%s&state=Ohio";
@@ -62,6 +66,12 @@ public class LocationTools {
         return getArcGISCandidates(parameterFormat, parameters);
     }
     
+    /**
+     * Find the standard postal addresses that are likely to refer to the same
+     * place as the input address, ranked from most likely to least likely.
+     * @param address The complete address of the location
+     * @return The list of candidate addresses
+     */
     public static String[] getArcGISCandidates(String address) {
         
         String parameterFormat = "f=json&singleLine=%s";
@@ -70,7 +80,14 @@ public class LocationTools {
         return getArcGISCandidates(parameterFormat, parameters);
     }
     
-    public static String[] getArcGISCandidates(String parameterFormat, String[] parameters) {
+    /**
+     * Send a query to the arcGIS findAddressCandidates API. Formats the url using
+     * the supplied parameters.
+     * @param parameterFormat A list of parameters to append to the url
+     * @param parameters The values of the parameters
+     * @return The address candidates returned by the API
+     */
+    private static String[] getArcGISCandidates(String parameterFormat, String[] parameters) {
         
         String url = "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates"; 
         String charset = java.nio.charset.StandardCharsets.UTF_8.name();
@@ -115,6 +132,11 @@ public class LocationTools {
         }                
     } 
     
+    /**
+     * Get the latitude and longitude of the supplied address.
+     * @param address The address to geocode
+     * @return The latitude and longitude of the address
+     */
     public static double[] geocodeAddress(String address) {
         
         String url = "http://www.mapquestapi.com/geocoding/v1/address?key=%s&location=%s"; 
@@ -159,6 +181,11 @@ public class LocationTools {
 
     }
     
+    /**
+     * Get the centroid of the Locations stored in a Route.
+     * @param route The Route to find the centroid of
+     * @return The centroid of the Route
+     */
     public static double[] getCentroid(Route route) {
         double x = 0;
         double y = 0;

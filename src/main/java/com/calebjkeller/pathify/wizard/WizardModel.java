@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 caleb
+ * Copyright (C) 2020 Caleb Keller
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,27 +23,49 @@ import java.util.HashMap;
  * accessible by subsequent pages.
  * 
  * @author Caleb Keller
- * @version 0.1
  */
 public class WizardModel {
     private HashMap<String, Object> data;
     
+    /**
+     * Create a new WizardModel.
+     */
     public WizardModel() {
         this.data = new HashMap<String, Object>();
     }
     
+    /**
+     * Check if this model contains the specified object.
+     * @param key The key to check for
+     * @return Whether the model contains an object for that key
+     */
     public boolean hasObject(String key) {
         return this.data.containsKey(key);
     }
     
+    /**
+     * Get the object associated with the provided key.
+     * @param key The key of the object to retrieve
+     * @return The object associated with the key
+     */
     public Object getObject(String key) {
         return this.data.get(key);
     }
     
+    /**
+     * Create a new key - object mapping in the model.
+     * @param key The key to associate with the object
+     * @param data The object to store
+     */
     public void setObject(String key, Object data) {
         this.data.put(key, data);
     }
     
+    /**
+     * Remove a key - object mapping from the model.
+     * @param key The key to remove
+     * @return If the key was in the model before attempting to remove it
+     */
     public boolean deleteObject(String key) {
         return this.data.remove(key) == null;
     }

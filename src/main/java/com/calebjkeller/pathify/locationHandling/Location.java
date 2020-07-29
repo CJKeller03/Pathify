@@ -1,8 +1,20 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2020 Caleb Keller
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.calebjkeller.pathify.locationHandling;
 
 import java.util.HashMap;
@@ -13,11 +25,13 @@ import java.util.HashMap;
  * @author Caleb Keller
  */
 public class Location {
+    // The names of the columns in the default csv file
     static final String[] defaultHeader = {"First Name", "Last Name", "House #",
                                             "Street", "Apt #         Lot #",
                                             "City", "Zip Code", "Phone #", "Kids",
                                             "Adults", "Seniors", "Total", "Notes:"};
     
+    // Used as an x,y coordinate for the fake distance matrix
     public int[] testPosition = new int[2];
     
     public String firstName;
@@ -36,14 +50,28 @@ public class Location {
     
     String notes;
     
+    /**
+     * Create a location object using the provided table and the default header.
+     * @param table An array representing one row of a csv file
+     */
     public Location(String[] table) {
         this.overwriteDataFromTable(table, defaultHeader);
     }
     
+    /**
+     * Create a location object using the provided table and header.
+     * @param table An array of Strings containing data about a Location.
+     * @param header An array of Strings describing the type of data at each index.
+     */
     public Location(String[] table, String[] header) {
         this.overwriteDataFromTable(table, header);
     }
     
+    /**
+     * Set this Location object's test position. Used for testing purposes only.
+     * @param x The x coordinate
+     * @param y The y coordinate
+     */
     public void setPosition(int x, int y) {
         this.testPosition[0] = x;
         this.testPosition[1] = y;
@@ -168,18 +196,34 @@ public class Location {
         return true;
     }
     
+    /**
+     * Set this Location object's arcGIS verified address.
+     * @param address The verified address to save
+     */
     public void setSafeAddress(String address) {
         oneLineAddress = address;
     }
     
+    /**
+     * Get this Location object's arcGIS verified address.
+     * @return The arcGIS verified address for this Location
+     */
     public String getSafeAddress() {
         return oneLineAddress;
     }
     
+    /**
+     * Set this Location object's box demand.
+     * @param demand The demand for this Location
+     */
     public void setDemand(int demand) {
         this.boxDemand = demand;
     }
     
+    /**
+     * Get this Location object's box demand.
+     * @return The demand for this Location
+     */
     public int getDemand() {
         return this.boxDemand;
     }

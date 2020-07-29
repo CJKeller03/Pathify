@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 caleb
+ * Copyright (C) 2020 Caleb Keller
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,8 +20,9 @@ import com.calebjkeller.pathify.wizard.pages.WizardPageInterface;
 import javax.swing.JFrame;
 
 /**
- *
- * @author caleb
+ * A class for handling and managing communication between the Wizard Panel, Model,
+ * and generator.
+ * @author Caleb Keller
  */
 public class WizardPanelController {
     
@@ -32,6 +33,12 @@ public class WizardPanelController {
     
     private JFrame frame;
     
+    /**
+     * Create a new controller that uses the provided generator for new pages
+     * and displays the wizard in the provided frame.
+     * @param generator The generator to use for new pages
+     * @param frame The frame to display the wizard in
+     */
     public WizardPanelController(WizardPageGeneratorInterface generator, JFrame frame) {
         panel = new WizardPanel(this);
         model = new WizardModel();
@@ -43,11 +50,17 @@ public class WizardPanelController {
         this.pullNextPage();
     }
     
+    /**
+     * Kill the wizard program.
+     */
     public void quit() {
         frame.setVisible(false);
         frame.dispose();
     }
     
+    /**
+     * Request a new page from the generator, and display it.
+     */
     public void pullNextPage() {
         
         if (curPage != null) {
@@ -60,6 +73,11 @@ public class WizardPanelController {
         
     }
     
+    /**
+     * Close whatever page is currently being displayed, and display the
+     * provided page instead.
+     * @param page The new page to display
+     */
     public void  pushNextPage(WizardPageInterface page) {
         if (curPage != null) {
             curPage.disable(model);

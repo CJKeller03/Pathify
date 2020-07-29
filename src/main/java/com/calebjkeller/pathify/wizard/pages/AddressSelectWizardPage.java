@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 caleb
+ * Copyright (C) 2020 Caleb Keller
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ import com.calebjkeller.pathify.wizard.WizardPanelController;
 import java.util.ArrayList;
 
 /**
- *
+ * Prompts the user for the correct address from a list of candidates.
  * @author Caleb Keller
  */
 public class AddressSelectWizardPage extends javax.swing.JPanel implements WizardPageInterface {
@@ -69,10 +69,10 @@ public class AddressSelectWizardPage extends javax.swing.JPanel implements Wizar
         System.out.println("select page started!");
         
         // SKIPS PAGE AUTOMATICALLY - REMOVE FROM HERE
-        
+        /*
         addressSelectBox.setSelectedIndex(0);
         controller.pullNextPage();
-        
+        */
         // TO HERE
     }
     

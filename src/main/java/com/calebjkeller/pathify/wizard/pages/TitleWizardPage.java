@@ -16,12 +16,10 @@
  */
 package com.calebjkeller.pathify.wizard.pages;
 
+import com.calebjkeller.pathify.App;
 import com.calebjkeller.pathify.wizard.WizardModel;
 import com.calebjkeller.pathify.wizard.WizardPanelController;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
-import java.util.HashMap;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -82,10 +80,10 @@ public class TitleWizardPage extends javax.swing.JPanel implements WizardPageInt
 
         setMinimumSize(new java.awt.Dimension(400, 300));
 
-        Header.setFont(new java.awt.Font("BankGothic Md BT", 0, 24)); // NOI18N
+        Header.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
         Header.setForeground(new java.awt.Color(255, 255, 255));
         Header.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        Header.setText("Pathify - V0.2");
+        Header.setText("Pathify " + App.version);
 
         jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
@@ -132,7 +130,7 @@ public class TitleWizardPage extends javax.swing.JPanel implements WizardPageInt
                 .addComponent(Header)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 110, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 108, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(generateButton)
                     .addComponent(selectButton))

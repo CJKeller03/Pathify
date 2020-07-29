@@ -17,6 +17,7 @@
 package com.calebjkeller.pathify.wizard.pages;
 
 
+import com.calebjkeller.pathify.App;
 import com.calebjkeller.pathify.locationHandling.Route;
 import com.calebjkeller.pathify.wizard.WizardModel;
 import com.calebjkeller.pathify.wizard.WizardPanelController;
@@ -26,7 +27,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
@@ -223,7 +223,7 @@ public class RouteDisplayPage extends javax.swing.JPanel implements WizardPageIn
                 + "Scan lower QR code for mapquest route (displays all destinations)<br>"
                 + "<h2>Please Report Errors</h2>"
                 + "If there is an error with this page, please send a picture of this page and a description of the error to pathify@gmail.com. Thanks!"
-                + "<h3>Pathify Pre-Alpha0.8 - July 2020</h3>"
+                + "<h3>Pathify " + App.version + " - July 2020</h3>"
                 + "Designed by Caleb Keller"
                 + "</html>",
                 this.routeNumber, this.route.getDistanceMiles(), this.route.getTimeString(), this.route.getNumBoxes()

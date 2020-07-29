@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 caleb
+ * Copyright (C) 2020 Caleb Keller
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,8 +41,8 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
- *
- * @author caleb
+ * A class for dynamically generating Wizard pages.
+ * @author Caleb Keller
  */
 public class PathifyWizardPageGenerator implements WizardPageGeneratorInterface {
     
@@ -60,10 +60,18 @@ public class PathifyWizardPageGenerator implements WizardPageGeneratorInterface 
     private ArrayList<String[]> skippedLocationOptions;
     private String[] currentLocationOptions;
     
+    /**
+     * Create a WizardPageGenerator instance
+     */
     public PathifyWizardPageGenerator() {
         
     }
     
+    /**
+     * Get a new page linked to the provided controller from the page generator.
+     * @param controller The controller to link the new page to
+     * @return The next WizardPage to display
+     */
     public WizardPageInterface nextPage(WizardPanelController controller) {
         
         while (enabled) {
@@ -235,6 +243,10 @@ public class PathifyWizardPageGenerator implements WizardPageGeneratorInterface 
         
     }
     
+    /**
+     * Set this generator's data model.
+     * @param model The model to use
+     */
     public void setModel(WizardModel model) {
         this.model = model;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 caleb
+ * Copyright (C) 2020 Caleb Keller
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,23 +23,28 @@ import java.io.FileReader;
 import java.util.ArrayList;
 
 /**
- *
- * @author caleb
+ * A class for handling the data within the delivery list csv file.
+ * @author Caleb Keller
  */
 public class DeliveryList {
     
     private ArrayList<Location> locations;
     private boolean isSafe;
     
+    /**
+     * Create a DeliveryList object from the data in a csv file.
+     * @param csvList The file to read data from
+     */
     public DeliveryList(File csvList) {
         locations = this.generateLocations(csvList);
         isSafe = false;
     }
     
-    public DeliveryList(File csvList, File addressTable) {
-        isSafe = true;
-    }
-    
+    /**
+     * Generate a location object from the data in each row of a csv file.
+     * @param csvList The file to read data from
+     * @return A list of Location objects for each row of the csv file
+     */
     private ArrayList generateLocations(File csvList) {
         ArrayList locations = new ArrayList<Location>();
         BufferedReader reader;
@@ -63,10 +68,19 @@ public class DeliveryList {
         return locations;
     }
     
+    /**
+     * Get the locations stored in this DeliveryList.
+     * @return A list of Location objects
+     */
     public ArrayList<Location> getLocations() {
         return this.locations;
     }
     
+    /**
+     * Get a Location object from the list.
+     * @param index The index of the Location to retrieve
+     * @return The Location object stored at the desired index
+     */
     public Location getLocation(int index) {
         return this.locations.get(index);
     }    
@@ -75,6 +89,10 @@ public class DeliveryList {
         
     }
     
+    /**
+     * Get the number of Locations stored in this DeliveryList.
+     * @return The size of the Location list
+     */
     public int getSize() {
         return locations.size();
     }

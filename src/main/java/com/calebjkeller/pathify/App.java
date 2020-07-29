@@ -25,7 +25,8 @@ import java.awt.BorderLayout;
  * @author caleb
  */
 public class App extends javax.swing.JFrame {
-
+    
+    public static String version = "Alpha 1.0";
     /**
      * Creates new form TestFrame
      */

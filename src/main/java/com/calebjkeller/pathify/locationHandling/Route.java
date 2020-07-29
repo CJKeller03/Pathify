@@ -33,6 +33,9 @@ public class Route {
     long approximateTime; //In seconds
     long numBoxes;
     
+    /**
+     * Create a new Route object without any locations.
+     */
     public Route() {
         this.locations = new ArrayList<Location>();
         this.totalDistance = 0;
@@ -40,6 +43,14 @@ public class Route {
         this.numBoxes = 0;
     }
     
+    /**
+     * Create a route visiting the locations supplied (in order) and set the 
+     * total distance, time, and number of boxes to the supplied values.
+     * @param locations The Locations to visit (in order)
+     * @param distance The total distance of the Route
+     * @param time The approximate total time to travel the Route (in a car)
+     * @param numBoxes The number of boxes to deliver on this Route
+     */
     public Route(ArrayList<Location> locations, long distance, long time, long numBoxes) {
         this.locations = locations;
         this.totalDistance = distance;
@@ -47,51 +58,97 @@ public class Route {
         this.numBoxes = numBoxes;
     }
     
+    /**
+     * Add a Location to the end of this Route.
+     * @param loc The Location to add
+     */
     public void addLocation(Location loc) {
         this.locations.add(loc);
         this.numBoxes += loc.boxDemand;
     }
     
+    /**
+     * Add multiple Locations to the end of this Route (in order).
+     * @param locations The Locations to add
+     */
     public void addLocations(ArrayList<Location> locations) {
         for (Location loc: locations) {
             this.locations.add(loc);
         }
     }
     
+    /**
+     * Get the list of Locations visited in this Route.
+     * @return A list of Locations.
+     */
     public ArrayList<Location> getLocations() {
         return this.locations;
     }
     
+    /**
+     * Get the number of stops on this Route. Doesn't include the origin.
+     * @return The number of stops
+     */
     public ArrayList<Location> getStops() {
         return (ArrayList) this.locations.subList(1, this.locations.size());
     }
     
+    /**
+     * Get the starting Location for this Route.
+     * @return A Location object that represents the start of the Route
+     */
     public Location getOrigin() {
         return this.locations.get(0);
     }
     
+    /**
+     * Set the total distance traveled in this Route in meters.
+     * @param dist The total distance
+     */
     public void setDistanceMeters(long dist) {
         this.totalDistance = dist;
     }
     
+    /**
+     * Get the total distance traveled in this Route in meters.
+     * @return The total distance
+     */
     public long getDistanceMeters() {
         return this.totalDistance;
     }
     
+    /**
+     * Get the total distance traveled in this Route in miles.
+     * @return The total distance
+     */
     public double getDistanceMiles() {
         DecimalFormat df = new DecimalFormat("##0.00");
         df.setRoundingMode(RoundingMode.HALF_UP);
         return Double.valueOf(df.format(this.totalDistance / METERS_PER_MILE));
     }
     
+    /**
+     * Set the approximate time taken to travel this Route in a car (in seconds).
+     * @param time The total time in seconds
+     */
     public void setTime(long time) {
         this.approximateTime = time;
     }
     
+    /**
+     * Get the approximate time taken to travel this Route in a car.
+     * @return The total time in seconds
+     */
     public long getTime() {
-        return 0l;
+        return this.approximateTime;
     }
     
+    /**
+     * Get the approximate time taken to travel this Route in a car, formatted
+     * as a human-readable String. Results will be formatted as:
+     * xx hours, xx minutes, and xx seconds.
+     * @return The total time, formatted as a String
+     */
     public String getTimeString() {
         
         long hours = this.approximateTime / 3600;
@@ -104,14 +161,26 @@ public class Route {
         
     }
     
+    /**
+     * Set the total number of boxes that must be delivered on this Route.
+     * @param numBoxes The total number of boxes
+     */
     public void setNumBoxes(long numBoxes) {
         this.numBoxes = numBoxes;
     }
     
+    /**
+     * Get the total number of boxes that must be delivered on this Route.
+     * @return The total number of boxes
+     */
     public long getNumBoxes() {
         return this.numBoxes;
     }
     
+    /**
+     * Get a String representation of this Route object.
+     * @return A String representing this Route
+     */
     public String toString() {
         String out = "";
         for (Location loc: this.locations) {
@@ -125,23 +194,34 @@ public class Route {
         return out;
     }
     
+    /**
+     * Get a table of the Locations that are visited by this Route, formatted
+     * into Strings.
+     * @return A 2d array of Location data
+     */
     public String[][] getAsTable() {
         
         String[][] out = new String[this.locations.size()][4];
         
-        int i = 0;
-        for (Location loc: this.locations) {
+        for (int i = 0; i < this.locations.size() - 1; i++) {
+            Location loc = this.locations.get(i + 1);
             String tags = "<html>%s</html>";
             out[i][0] = String.format(tags, loc.firstName + " " + loc.lastName);
             out[i][1] = String.format(tags, loc.getSafeAddress());
             out[i][2] = String.format(tags, loc.phoneNumber);
             out[i][3] = String.format(tags, loc.notes);
-            i++;
         }
         
         return out;
     }
     
+    /**
+     * Get a QR code that opens a google maps route visiting this Route object's
+     * Locations. Google maps won't display more than 10 stops on a Route.
+     * @param width The desired width of the QR code
+     * @param height The desired height of the QR code
+     * @return A QR code
+     */
     public BufferedImage getGoogleMapsQRCode(int width, int height) {
         if (this.locations.size() <= 1) {
             return null;
@@ -170,6 +250,13 @@ public class Route {
         return this.generateQRCode(url, width, height);
     }
     
+    /**
+     * Get a QR code that opens a mapquest route visiting this Route object's
+     * Locations.
+     * @param width The desired width of the QR code
+     * @param height The desired height of the QR code
+     * @return A QR code
+     */
     public BufferedImage getMapquestQRCode(int width, int height) {
         if (this.locations.size() <= 1) {
             return null;
@@ -198,6 +285,14 @@ public class Route {
         return this.generateQRCode(url, width, height);
     }    
     
+    /**
+     * Generates a QR code from a provided url with the desired width and height
+     * (if possible). The actual size of the code may vary. 
+     * @param url The url the QR code should open
+     * @param width The desired width of the QR code
+     * @param height The desired height of the QR code
+     * @return A QR code
+     */
     private BufferedImage generateQRCode(String url, int width, int height) {
         QRCodeWriter writer = new QRCodeWriter();
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB); // create an empty image
@@ -223,6 +318,13 @@ public class Route {
         return image;
     }
     
+    /**
+     * Get a google maps image of the area surrounding the Locations on this Route
+     * with each Location pinned on the map.
+     * @param width The desired width of the roadmap
+     * @param height The desired height of the roadmap
+     * @return A roadmap with pins for each Location
+     */
     public BufferedImage getMap(int width, int height) {
         if (this.locations.size() <= 1) {
             return null;

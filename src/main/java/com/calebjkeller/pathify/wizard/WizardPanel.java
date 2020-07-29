@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 caleb
+ * Copyright (C) 2020 Caleb Keller
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,8 +22,8 @@ import java.awt.event.KeyEvent;
 import javax.swing.JPanel;
 
 /**
- *
- * @author caleb
+ * A JPanel for handling switching between WizardPage objects.
+ * @author Caleb Keller
  */
 public class WizardPanel extends javax.swing.JPanel {
 
@@ -132,7 +132,11 @@ public class WizardPanel extends javax.swing.JPanel {
             controller.pullNextPage();
         }
     }//GEN-LAST:event_nextButtonKeyPressed
-
+    
+    /**
+     * Remove the current page from the CardLayout, add the new page, and display it.
+     * @param page The new page to display
+     */
     public void displayPage(WizardPageInterface page) {
         CardLayout layout = (CardLayout)(this.pageArea.getLayout());
         
