@@ -3,14 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.calebjkeller</groupId>
     <artifactId>Pathify</artifactId>
-    <version>Alpha 1.0</version>
+    <version>Alpha 1.2</version>
     <packaging>jar</packaging>
-    <repositories>
-        <repository>
-            <id>arcgis</id> 
-            <url>https://esri.bintray.com/arcgis</url>
-        </repository>
-    </repositories>
     <dependencies>
         <dependency>
             <groupId>com.google.ortools</groupId>
@@ -39,31 +33,42 @@
         <maven.compiler.target>14</maven.compiler.target>
     </properties>
     <build>
-        <plugins>           
+        <plugins> 
             <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-assembly-plugin</artifactId>
-              <version>3.3.0</version>
-              <configuration>
-                <descriptorRefs>
-                  <descriptorRef>jar-with-dependencies</descriptorRef>
-                </descriptorRefs>
-                <archive>
-                    <manifest>
-                        <addClasspath>true</addClasspath>
-                        <mainClass>com.calebjkeller.pathify.App</mainClass>
-                    </manifest>
-                </archive>                
-              </configuration>
-              <executions>
-                <execution>
-                  <id>make-assembly</id> <!-- this is used for inheritance merges -->
-                  <phase>package</phase> <!-- bind to the packaging phase -->
-                  <goals>
-                    <goal>single</goal>
-                  </goals>
-                </execution>
-              </executions>
-            </plugin>            
+                <configuration>
+                  <descriptorRefs>
+                    <descriptorRef>jar-with-dependencies</descriptorRef>
+                  </descriptorRefs>
+                  <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>com.calebjkeller.pathify.App</mainClass>
+                        </manifest>
+                  </archive>                
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>jar-with-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptor>src/main/assembly/assembly.xml</descriptor>
+                            <appendAssemblyId>false</appendAssemblyId>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>                   
         </plugins>
     </build>    
 </project>

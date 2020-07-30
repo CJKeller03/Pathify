@@ -26,7 +26,7 @@ import java.awt.BorderLayout;
  */
 public class App extends javax.swing.JFrame {
     
-    public static String version = "Alpha 1.0";
+    public static String version = "Alpha 1.2";
     /**
      * Creates new form TestFrame
      */
@@ -44,7 +44,7 @@ public class App extends javax.swing.JFrame {
     private void initComponents() {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Pathify Pre-Alpha0.8");
+        setTitle("Pathify " + version);
         setSize(new java.awt.Dimension(500, 400));
 
         pack();

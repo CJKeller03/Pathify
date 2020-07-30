@@ -9,11 +9,12 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
@@ -201,7 +202,7 @@ public class Route {
      */
     public String[][] getAsTable() {
         
-        String[][] out = new String[this.locations.size()][4];
+        String[][] out = new String[this.locations.size() - 1][4];
         
         for (int i = 0; i < this.locations.size() - 1; i++) {
             Location loc = this.locations.get(i + 1);
@@ -338,7 +339,10 @@ public class Route {
         String key;
         
         try {
-            key = Files.readAllLines(Paths.get("ApiKeys.txt")).get(0);
+            InputStream is = Route.class.getClassLoader().getResourceAsStream("ApiKeys.txt");
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+            key = br.readLine();
         } catch (Exception e) {
             e.printStackTrace();
             return null;

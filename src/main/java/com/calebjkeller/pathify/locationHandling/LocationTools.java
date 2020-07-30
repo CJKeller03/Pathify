@@ -16,11 +16,12 @@
  */
 package com.calebjkeller.pathify.locationHandling;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Scanner;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -144,7 +145,12 @@ public class LocationTools {
         
         try {
             
-            String key = Files.readAllLines(Paths.get("ApiKeys.txt")).get(2);
+            InputStream is = LocationTools.class.getClassLoader().getResourceAsStream("/ApiKeys.txt");
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+            br.readLine();
+            String key = br.readLine();
+            
             address = URLEncoder.encode(address);
             
             url = String.format(url, key, address);

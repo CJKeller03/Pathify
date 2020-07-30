@@ -6,14 +6,17 @@
 package com.calebjkeller.pathify;
 
 import com.calebjkeller.pathify.locationHandling.Location;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -29,6 +32,14 @@ import org.json.simple.parser.JSONParser;
 public class Tools {
     
     /**
+     * Load a dll file embedded into the jar file. This is necessary because java
+     * cannot load a dll without extracting it from the jar first.
+     * Code retrieved from https://stackoverflow.com/questions/4691095/java-loading-dlls-by-a-relative-path-and-hide-them-inside-a-jar
+     * @param name The name of the file
+     * @throws IOException 
+     */
+
+    /**
      * Generate an ArrayList of Location objects from the data stored in
      * a csv file. The first line of the file is assumed to be the header, which
      * is used to identify the data stored in each column.
@@ -37,7 +48,6 @@ public class Tools {
      * @return The ArrayList of Location objects.
      * @throws IOException 
      */
-    
     public static HashMap<String, long[]> generateFakeDistanceMatrix(ArrayList<Location> locations) {  
         
         HashMap addressMatrix = new HashMap<String, long[]>();
@@ -74,7 +84,10 @@ public class Tools {
         // Read the API key to be used from a file
         String key;
         try {
-            key = Files.readAllLines(Paths.get("ApiKeys.txt")).get(0);
+            InputStream is = Tools.class.getClassLoader().getResourceAsStream("ApiKeys.txt");
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+            key = br.readLine();
         } catch (Exception e) {
             e.printStackTrace();
             return null;

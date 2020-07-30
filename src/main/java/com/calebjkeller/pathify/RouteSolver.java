@@ -22,16 +22,38 @@ import com.google.ortools.constraintsolver.RoutingIndexManager;
 import com.google.ortools.constraintsolver.RoutingModel;
 import com.google.ortools.constraintsolver.RoutingSearchParameters;
 import com.google.ortools.constraintsolver.main;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 // [END import]
 
 /** Minimal VRP.*/
 public class RouteSolver {
-  static {
-    System.loadLibrary("jniortools");
-  }
+
+  
+  private static String dllFile = "jniortools.dll";
   
   public static ArrayList<Route> solve(SolverDataModel data) {
+    
+    try {
+        InputStream in = RouteSolver.class.getClassLoader().getResourceAsStream(dllFile);
+        byte[] buffer = new byte[1024];
+        int read = -1;
+        File temp = File.createTempFile(dllFile, "");
+        FileOutputStream fos = new FileOutputStream(temp);
+
+        while((read = in.read(buffer)) != -1) {
+            fos.write(buffer, 0, read);
+        }
+        fos.close();
+        in.close();
+        
+        System.load(temp.getAbsolutePath());
+        
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
 
     // Create Routing Index Manager
     // [START index_manager]
